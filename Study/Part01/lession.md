@@ -55,3 +55,33 @@ React.createElement(
   Hello, {name: 'Hien'},
 ),
 ```
+# Javascript
+## Content
+- Variables
+  - let, const
+- Arrays
+- Objects
+- Functions
+  - Arrow function
+  - Function declaration
+- Exercises
+- Object methods and "this"
+- Class
+```
+class Person {
+  constructor(name, age) {
+    this.name = name
+    this.age = age
+  }
+  greet() {
+    console.log('hello, my name is', this.name)
+  }
+}
+
+const adam = new Person('Adam Ondra', 35)
+adam.greet()
+
+const janja = new Person('Janja Garnbret', 22)
+janja.greet()
+```
+# Component state, event handlers
