@@ -94,8 +94,19 @@ const { name, age } = props
 ```
 const setToValue = (value) => setCounter(value)
 ```
-- Get error to many re-render => it is function call, not refernce to the function
+- Get error to many re-render => it is function call, not reference to the function
 - useState uses 2 parameters
 ```
 [thing, setThing] = useState()
 ```
+# A more complex state, debugging React apps
+- Simple: useState for every vairable
+- Complex: useState({left, right})
+- Object spread ...clicks
+- it is forbidden in React to mutate state directly, since it can result in unexpected side effects
+- Handling arrays vs conditional rendering
+- state hook (https://reactjs.org/docs/hooks-state.html)
+  - Hooks are a new addition in React 16.8. They let you use state and other React features without writing a class.
+  - Rules of Hooks
+    - hooks may only be called from the inside of a function body that defines a React component
+- Passing Event Handlers to Child Components
