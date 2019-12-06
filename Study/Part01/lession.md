@@ -85,3 +85,17 @@ const janja = new Person('Janja Garnbret', 22)
 janja.greet()
 ```
 # Component state, event handlers
+## helper functions
+## Destructuring
+```
+const { name, age } = props
+```
+## Stateful component
+```
+const setToValue = (value) => setCounter(value)
+```
+- Get error to many re-render => it is function call, not refernce to the function
+- useState uses 2 parameters
+```
+[thing, setThing] = useState()
+```
