@@ -110,3 +110,7 @@ const setToValue = (value) => setCounter(value)
   - Rules of Hooks
     - hooks may only be called from the inside of a function body that defines a React component
 - Passing Event Handlers to Child Components
+- Do Not Define Components Within Components
+- Useful Reading
+  - Offical: https://reactjs.org/docs/hello-world.html
+  - Other: https://egghead.io/
