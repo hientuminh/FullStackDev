@@ -12,3 +12,5 @@
 - Key-attribute: https://reactjs.org/docs/reconciliation.html#recursing-on-children
 - anti-pattern: array indexes as keys: https://medium.com/@robinpokorny/index-as-a-key-is-an-anti-pattern-e0349aece318
   - notes.map((note, i) => ...): not recommended
+
+# Forms
