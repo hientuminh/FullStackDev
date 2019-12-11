@@ -14,3 +14,20 @@
   - notes.map((note, i) => ...): not recommended
 
 # Forms
+```
+<form onSubmit={addNote} onChange>
+```
+# Getting Data from server
+- Using JSON Server
+```
+npm install -g json-server
+npx json-server --port 3001 --watch db.json
+```
+- Asynchronous model: https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop
+- Non-Blocking vs Blocking
+  - Blocking means sync, NOn-Blocking means async
+- Effect Hooks
+  - By default, effects run after every completed render, but you can choose to fire it only when certain values have changed.
+  - useEffect(hook, []): 2 parameters
+    - The first is a function, the effect itself
+    - The second parameter of useEffect is used to specify how often the effect is run. If the second parameter is an empty array [], then the effect is only run along with the first render of the component.
