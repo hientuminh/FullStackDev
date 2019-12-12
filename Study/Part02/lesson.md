@@ -31,3 +31,10 @@ npx json-server --port 3001 --watch db.json
   - useEffect(hook, []): 2 parameters
     - The first is a function, the effect itself
     - The second parameter of useEffect is used to specify how often the effect is run. If the second parameter is an empty array [], then the effect is only run along with the first render of the component.
+# Altering data in Server
+- Using json-server with post
+- concat method does not change the component's original state, but instead creates a new copy of the list.
+- object spread { ...note}
+- shallow copy vs deep copy: https://en.wikipedia.org/wiki/Object_copying#Shallow_copy
+- concat vs push: React can use push?
+- Promises and errors
