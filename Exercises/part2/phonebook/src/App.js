@@ -43,7 +43,7 @@ const App = () => {
     setSearchName('')
   }
 
-  const handleChange = (event) => {
+  const handleInputChange = (event) => {
     if (event.target.name === 'name') {
       const newPhoneBook = {
         ...phoneBook,
@@ -68,13 +68,13 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter
         searchName={searchName}
-        onChange={handlePhoneBookFilter}/>
+        onPhoneBookFilterChange={handlePhoneBookFilter}/>
       <h3>Add a new</h3>
       <PersonForm
-        onSubmit={handleFormSubmission}
+        onSubmissionChange={handleFormSubmission}
         nameValue={phoneBook.name}
         numberValue={phoneBook.number}
-        onChange={handleChange}
+        onInputChange={handleInputChange}
       />
       <Persons
         persons={allOfPerson}
