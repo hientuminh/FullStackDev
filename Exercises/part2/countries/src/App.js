@@ -7,13 +7,12 @@ import CountryList from './components/CountryList'
 const App = () => {
   const [countries, setCountries] = useState([])
   const [searchName, setSearchName] = useState('')
-  const [chooseCountry, setChooseCountry] = useState('')
 
   useEffect(() => {
     if (searchName !== '') {
       setTimeout(function() {
         countriesService.findByName(searchName).then(response => setCountries(response))
-      }, 3000)
+      }, 1000)
     } else {
       countriesService.getAll().then(response => setCountries(response))
     }
@@ -21,18 +20,15 @@ const App = () => {
 
   const handleSearchName = (event) => {
     setSearchName(event.target.value)
-    setChooseCountry('')
   }
 
   const handleShowCountryDetail = (chooseCountry) => {
-    setChooseCountry(chooseCountry)
     setSearchName(chooseCountry)
   }
   return (
     <div>
-
-      <Filter searchName={searchName} onChange={handleSearchName}/>
-      <CountryList countries={countries} onSubmit={handleShowCountryDetail} chooseCountry={chooseCountry}/>
+      <Filter searchName={searchName} onFilterChange={handleSearchName}/>
+      <CountryList countries={countries} onShowCountryDetail={handleShowCountryDetail}/>
     </div>
   )
 }

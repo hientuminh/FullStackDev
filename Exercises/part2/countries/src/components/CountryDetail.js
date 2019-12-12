@@ -11,7 +11,7 @@ const CountryDetail = ({country}) => {
   }, [country.capital])
 
   const languages = () => country.languages.map(lang => <li key={lang.name}>{lang.name}</li>)
-  console.log(weather)
+
   if (weather) {
     const icon = (weather && weather.weather_icons) ? weather.weather_icons[0] : null
     return (

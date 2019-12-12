@@ -13,14 +13,14 @@ const CountryName = ({countryName, country}) => {
   )
 }
 
-const CountryList = ({countries, onSubmit, chooseCountry}) => {
+const CountryList = ({countries, onShowCountryDetail}) => {
 
   if (countries.length === 0) {
     return (<></>)
   }
   if (countries.length <= 10 && countries.length > 1) {
     const countriesName = () => countries.map(country =>
-      <CountryName key={country.name} countryName={country.name} country={onSubmit}/>
+      <CountryName key={country.name} countryName={country.name} country={onShowCountryDetail}/>
     )
     return (
       <div>{countriesName()}</div>
