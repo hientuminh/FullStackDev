@@ -2,14 +2,13 @@ import axios from 'axios'
 
 const baseUrl = 'https://restcountries.eu/rest/v2/'
 
-const getAll = () => {
-  const promise = axios.get(baseUrl + 'all')
+const getCountryByName = (searchName) => {
+  let uri = 'all'
+  if (!!searchName.trim()) {
+    uri = `name/${searchName}`
+  }
+  const promise = axios.get(`${baseUrl}${uri}`)
   return promise.then(response => response.data)
 }
 
-const findByName = (searchName) => {
-  const promise = axios.get(`${baseUrl}name/${searchName}`)
-  return promise.then(response => response.data)
-}
-
-export default { getAll, findByName }
+export default { getCountryByName }
