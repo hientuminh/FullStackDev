@@ -1,16 +1,16 @@
 import React from 'react'
 import Person from './Person'
 
-const Persons = (props) => {
-  const persons = () => props.persons.map(person =>
+const Persons = ({persons, onClickDeletePerson}) => {
+  const showPersons = () => persons.map(person =>
     <Person
-      key={person.name}
-      name={person.name}
-      number={person.number} />
+      key={person.id}
+      person={person}
+      onClickDeletePerson={onClickDeletePerson}/>
   )
 
   return (
-    <div>{persons()}</div>
+    <div>{showPersons()}</div>
   )
 }
 
