@@ -38,3 +38,7 @@ npx json-server --port 3001 --watch db.json
 - shallow copy vs deep copy: https://en.wikipedia.org/wiki/Object_copying#Shallow_copy
 - concat vs push: React can use push?
 - Promises and errors
+
+# Adding styles to React app
+- Internal style
+- Inline style: define as s separate property of JS object
