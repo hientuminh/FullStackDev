@@ -3,9 +3,11 @@ import personService from './services/persons'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons] = useState([])
+  const [ message, setMessage] = useState({type: '', content: ''})
 
   useEffect(() => {
     personService.getAll().then(persons => setPersons(persons))
@@ -54,6 +56,8 @@ const App = () => {
         .createPhoneBook(phoneBookObject)
         .then(returnedPhoneBook => {
           setPersons(persons.concat(phoneBookObject))
+          const messageShow = {type: 'succes', content: `Added ${phoneBook.name}`}
+          setMessage(messageShow)
         })
         .catch(error => {
           alert('the phonebook was created failed')
@@ -82,13 +86,15 @@ const App = () => {
   }
 
   const handleClickDeletePerson = id => {
+    const deletePerson = persons.find(person => person.id === parseInt(id))
     personService
       .deletePhoneBook(id)
       .then(returnedPhoneBook => {
         setPersons(persons.filter(person => person.id !== parseInt(id)))
       })
       .catch(error => {
-        alert('the phonebook was deleted failed')
+        const messageShow = {type: 'error', content: `Information of ${deletePerson.name} has already been removed from server`}
+        setMessage(messageShow)
       })
   }
 
@@ -97,6 +103,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <Filter
         searchName={searchName}
         onPhoneBookFilterChange={handlePhoneBookFilter}/>
