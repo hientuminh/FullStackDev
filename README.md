@@ -17,7 +17,7 @@ The repository for MERN + GraphQL
 - [x] Altering data in server
 - [x] Adding style to React app
 ## Part 3: Programming a server with NodeJS and Express
-- [ ] Node.js and Express
+- [x] Node.js and Express
 - [ ] Deploying app to internet
 - [ ] Saving data to MongoDB
 - [ ] Validation and ESLint
