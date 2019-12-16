@@ -13,3 +13,24 @@
 - nodemon: nodemon will watch the files in the directory in which nodemon was started, and if any files change, nodemon will automatically restart your node application.
 - REST: RESTful API (GET /notes/10 , GET /notes, POST /notes, DELETE /notes/10, PUT /notes/10, PATCH /notes/10)
 - Receiving data
+
+# Deploying app to internet
+- We can allow requests from other origins by using Node's cors middleware.
+- https://pacific-spire-21588.herokuapp.com/
+- source: https://github.com/hientuminh/notes_test
+```
+npm install cors --save
+```
+- We use heroku to deploy nodejs app
+```
+heroku login
+heroku create
+heroku git:remote -a <app>
+heroku push heroku master
+```
+- Deploy react app
+  -
+```
+npm install
+npm run build
+```
