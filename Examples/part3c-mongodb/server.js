@@ -1,10 +1,45 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const mongoose = require('mongoose')
+const Note = require('./models/note')
 
 app.use(bodyParser.json())
 app.use(cors())
+
+const url = process.env.MONGODB_URI
+console.log('connecting to', url)
+
+mongoose.connect(url, { useNewUrlParser: true })
+  .then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
+// const url =
+//   'mongodb+srv://admin:livepass@cluster0-ra1o1.mongodb.net/test?retryWrites=true&w=majority'
+//
+// mongoose.connect(url, { useNewUrlParser: true })
+//
+// const noteSchema = new mongoose.Schema({
+//   content: String,
+//   date: Date,
+//   important: Boolean,
+// })
+//
+// noteSchema.set('toJSON', {
+//   transform: (document, returnedObject) => {
+//     returnedObject.id = returnedObject._id.toString()
+//     delete returnedObject._id
+//     delete returnedObject.__v
+//   }
+// })
+//
+// const Note = mongoose.model('Note', noteSchema)
 
 let notes = [
   {
@@ -31,19 +66,17 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>')
 })
 
-app.get('/notes', (req, res) => {
-  res.json(notes)
+app.get('/api/notes', (req, res) => {
+  Note.find({}).then(notes => {
+    res.json(notes.map(note => note.toJSON()))
+  })
 })
 
 
-app.get('/notes/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const note = notes.find(note => note.id === id)
-  if (note) {
-    res.json(note)
-  } else {
-    res.status(404).end()
-  }
+app.get('/api/notes/:id', (req, res) => {
+  Note.findById(req.params.id).then(note => {
+    res.json(note.toJSON())
+  })
 })
 
 const generateId = () => {
@@ -53,7 +86,7 @@ const generateId = () => {
   return maxId + 1
 }
 
-app.post('/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
   const body = req.body
   if (!body.content) {
     return res.status(400).json({
@@ -61,15 +94,15 @@ app.post('/notes', (req, res) => {
     })
   }
 
-  const note = {
+  const note = new Note ({
     content: body.content,
     important: body.important || false,
-    date: new Date(),
-    id: generateId(),
-  }
+    date: new Date()
+  })
 
-  notes = notes.concat(note)
-  res.json(note)
+  note.save().then(savedNote => {
+    res.json(savedNote.toJSON())
+  })
 })
 
 app.delete('/notes/:id', (req, res) => {
