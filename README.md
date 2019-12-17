@@ -18,7 +18,10 @@ The repository for MERN + GraphQL
 - [x] Adding style to React app
 ## Part 3: Programming a server with NodeJS and Express
 - [x] Node.js and Express
-- [ ] Deploying app to internet
+- [x] Deploying app to internet
+  - [x] Exercise phonebook
+    - https://github.com/hientuminh/phonebook
+    - https://powerful-harbor-41906.herokuapp.com/
 - [ ] Saving data to MongoDB
 - [ ] Validation and ESLint
 ## Part 4: Testing Express server, user administration

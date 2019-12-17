@@ -29,8 +29,13 @@ heroku git:remote -a <app>
 heroku push heroku master
 ```
 - Deploy react app
-  -
 ```
 npm install
 npm run build
 ```
+- We have two solutions
+  - Create 2 seperate repo (1 backend, 1 frontend)
+    - Run npm run build then copy build folder to backend repo and deploy
+  - Use one repository
+    - create src folder (keep name) and copy source frontend into.
+    - Add lib to package.json and build
