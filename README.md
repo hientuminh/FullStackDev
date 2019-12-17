@@ -22,7 +22,8 @@ The repository for MERN + GraphQL
   - [x] Exercise phonebook
     - https://github.com/hientuminh/phonebook
     - https://powerful-harbor-41906.herokuapp.com/
-- [ ] Saving data to MongoDB
+- [x] Saving data to MongoDB
+  - https://cloud.mongodb.com/v2/5c7cf3d29ccf640d3d59ef13#metrics/replicaSet/5df85164f2a30bcfa429de94/explorer/phonebook/people/find
 - [ ] Validation and ESLint
 ## Part 4: Testing Express server, user administration
 ## Part 5: Testing React apps, custom hooks
