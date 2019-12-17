@@ -86,11 +86,11 @@ const App = () => {
   }
 
   const handleClickDeletePerson = id => {
-    const deletePerson = persons.find(person => person.id === parseInt(id))
+    const deletePerson = persons.find(person => person.id === id)
     personService
       .deletePhoneBook(id)
       .then(returnedPhoneBook => {
-        setPersons(persons.filter(person => person.id !== parseInt(id)))
+        setPersons(persons.filter(person => person.id !== id))
       })
       .catch(error => {
         const messageShow = {type: 'error', content: `Information of ${deletePerson.name} has already been removed from server`}

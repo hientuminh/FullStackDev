@@ -1,9 +1,12 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const rfs = require('rotating-file-stream')
 const path = require('path')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
+const Person = require('./models/person')
 
 // create a write stream
 const accessLogStream = rfs.createStream('access.log', {
@@ -49,16 +52,27 @@ let persons = [
   }
 ]
 
+//
+// mongoose.connect(url, { useNewUrlParser: true })
+//   .then(result => {
+//     console.log('connected to MongoDB')
+//   })
+//   .catch((error) => {
+//     console.log('error connecting to MongoDB:', error.message)
+//   })
+
 app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>')
 })
 
-app.get('/persons', (req, res) => {
-  res.json(persons)
+app.get('/api/persons', (req, res) => {
+  Person.find({}).then(persons => {
+    res.json(persons.map(person => person.toJSON()))
+  })
 })
 
 
-app.get('/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const note = persons.find(note => note.id === id)
   if (note) {
@@ -75,7 +89,7 @@ const generateId = () => {
   return maxId + 1
 }
 
-app.post('/persons', (req, res) => {
+app.post('/api/persons', (req, res) => {
   const body = req.body
   if (!body.name || !body.number) {
     return res.status(400).json({
@@ -83,20 +97,21 @@ app.post('/persons', (req, res) => {
     })
   }
 
-  const phoneBook = {
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: generateId(),
-  }
+    number: body.number
+  })
 
-  persons = persons.concat(phoneBook)
-  res.json(phoneBook)
+  person.save().then(savedPerson => {
+    res.json(savedPerson.toJSON())
+  })
 })
 
-app.delete('/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const note = persons.filter(person => person.id === id)
-  res.status(204).end()
+app.delete('/api/persons/:id', (req, res) => {
+  const id = req.params.id
+  Person.deleteOne({_id: id}).then(deletedPerson => {
+    res.status(204).end()
+  })
 })
 
 const PORT = 3001
