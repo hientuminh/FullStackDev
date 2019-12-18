@@ -43,3 +43,17 @@ npm run build
 - Install: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
 - Conection: mongodb+srv://admin:<password>@cluster0-ra1o1.mongodb.net/test?retryWrites=true&w=majority
 - password was configured at https://cloud.mongodb.com/v2/5c7cf3d29ccf640d3d59ef13#security/database/users
+- Using dotenv
+- Command
+```
+node mongo.js <> <>
+```
+- Mongo command
+```
+- save()
+- find, findById
+- deleteOne
+- findOneAndUpdate ({new: true}) && mongoose.set('useFindAndModify', false)
+```
+- Error handling: using catch
+- Moving error handling into middleware

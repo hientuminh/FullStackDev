@@ -74,17 +74,18 @@ app.get('/api/notes', (req, res) => {
 
 
 app.get('/api/notes/:id', (req, res) => {
-  Note.findById(req.params.id).then(note => {
-    res.json(note.toJSON())
-  })
+  Note.findById(req.params.id)
+    .then(note => {
+      if (note) {
+        res.json(note.toJSON())
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => {
+      res.status(404).send({error: 'malformatted id'})
+    })
 })
-
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
-}
 
 app.post('/api/notes', (req, res) => {
   const body = req.body
