@@ -75,3 +75,18 @@ app.post('/api/notes', (request, response) => {
 app.use(bodyParser.json())
 ```
 - It's also important that the middleware for handling unsupported routes is next to the last middleware that is loaded into Express, just before the error handler.
+
+# Validation and ESLint
+- Using validation in Schema
+- Promise Chaining
+```
+note
+  .save()
+  .then(savedNote) => return savedNote.toJSON())
+  .then(savedAndFormattedNote => {
+    response.json(savedAndFormattedNote)
+  })
+  .catch(error => next(error))
+```
+- Deploying the database backend to production
+  - heroku config:set MONGODB_URI=mongodb+srv://fullstack:secred@cluster0-ostce.mongodb.net/note-app?retryWrites=true
