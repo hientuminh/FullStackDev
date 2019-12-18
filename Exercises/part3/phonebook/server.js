@@ -19,6 +19,16 @@ const accessLogStream = rfs.createStream('access.log', {
 app.use(morgan('combined', {stream: accessLogStream }))
 app.use(bodyParser.json())
 
+const requestLogger = (request, response, next) => {
+  console.log('Method: ', request.method)
+  console.log('Path: ', request.path)
+  console.log('Body: ', request.body)
+  console.log('----')
+  next()
+}
+
+app.use(requestLogger)
+app.use(express.static('build'))
 //
 // mongoose.connect(url, { useNewUrlParser: true })
 //   .then(result => {
@@ -38,10 +48,15 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id).then(person => {
-    res.json(person.toJSON())
+    if (person) {
+      res.json(person.toJSON())
+    } else {
+      res.status(400).end()
+    }
   })
+  .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
@@ -60,6 +75,7 @@ app.post('/api/persons', (req, res) => {
   person.save().then(savedPerson => {
     res.json(savedPerson.toJSON())
   })
+  .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -67,6 +83,7 @@ app.delete('/api/persons/:id', (req, res) => {
   Person.deleteOne({_id: id}).then(deletedPerson => {
     res.status(204).end()
   })
+  .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res) => {
@@ -80,7 +97,26 @@ app.put('/api/persons/:id', (req, res) => {
     console.log(updatedPerson)
     res.json(updatedPerson.toJSON())
   })
+  .catch(error => next(error))
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).end({error: 'unknown endpoint'})
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
+    return response.status(400).send({error: 'malformatted id'})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = 3001
 const HOST = 'localhost'

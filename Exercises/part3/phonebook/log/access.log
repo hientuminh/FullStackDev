@@ -75,3 +75,7 @@
 ::ffff:127.0.0.1 - - [18/Dec/2019:02:44:36 +0000] "GET /api/persons HTTP/1.1" 200 470 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
 ::ffff:127.0.0.1 - - [18/Dec/2019:02:45:38 +0000] "PUT /api/persons/5df8961ec48cb5aa5f6057f3 HTTP/1.1" 200 78 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
 ::ffff:127.0.0.1 - - [18/Dec/2019:02:46:07 +0000] "GET /api/persons HTTP/1.1" 200 470 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
+::1 - - [18/Dec/2019:06:14:32 +0000] "GET /api/notes HTTP/1.1" 404 1986 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
+::1 - - [18/Dec/2019:06:14:35 +0000] "GET /api/persons HTTP/1.1" 200 470 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
+::1 - - [18/Dec/2019:06:14:39 +0000] "GET /api/persons/5df87cdf6dd8fea07e3fa789 HTTP/1.1" 200 76 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
+::1 - - [18/Dec/2019:06:16:32 +0000] "GET /api/persons/5df87cdf6dd8fea07e3fa789d HTTP/1.1" 400 27 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
