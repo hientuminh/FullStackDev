@@ -59,32 +59,33 @@ app.post('/api/notes', (req, res, next) => {
     .save()
     .then((savedNote) => savedNote.toJSON())
     .then(savedAndFormattedNote => {
-      response.json(savedAndFormattedNote)
+      res.json(savedAndFormattedNote)
     })
     .catch(error => next(error))
 })
 
 app.delete('/notes/:id', (req, res, next) => {
   const id = req.params.id
-  Person.deleteOne({_id: id}).then(deletedPerson => {
-    res.status(204).end()
-  })
-  .catch(error => next(error))
+  Note.deleteOne({ _id: id })
+    .then(() => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).end({error: 'unknown endpoint'})
+  response.status(404).end({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.error(error.message)
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
-    return response.status(422).json({error: error.message })
+    return response.status(422).json({ error: error.message })
   }
 
   next(error)
