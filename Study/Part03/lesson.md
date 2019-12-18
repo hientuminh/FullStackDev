@@ -57,3 +57,21 @@ node mongo.js <> <>
 ```
 - Error handling: using catch
 - Moving error handling into middleware
+  - The error that is passed forwards is given to the next function as a parameter. If next was called without a parameter, then the execution would simply move onto the next route or middleware. If the next function is called with a parameter, then the execution will continue to the error handler middleware.
+- The order of middleware loading
+  - The execution order of middleware is the same as the order that they are loaded into express with the app.use function. For this reason it is important to be careful when defining middleware.
+  - https://github.com/fullstackopen-2019/part3-notes-backend/blob/part3-4/index.js
+- Middleware
+- Logger will empty
+```
+app.use(logger) // request.body is empty!
+
+app.post('/api/notes', (request, response) => {
+  // request.body is empty!
+  const body = request.body
+  // ...
+})
+
+app.use(bodyParser.json())
+```
+- It's also important that the middleware for handling unsupported routes is next to the last middleware that is loaded into Express, just before the error handler.
