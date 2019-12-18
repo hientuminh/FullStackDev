@@ -19,39 +19,6 @@ const accessLogStream = rfs.createStream('access.log', {
 app.use(morgan('combined', {stream: accessLogStream }))
 app.use(bodyParser.json())
 
-let persons = [
-  {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 1
-  },
-  {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 2
-  },
-  {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 3
-  },
-  {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 4
-  },
-  {
-    "name": "Tu Hien",
-    "number": "+84-932-447376",
-    "id": 5
-  },
-  {
-    "name": "Yen Nhi",
-    "number": "84-906-464342",
-    "id": 6
-  }
-]
-
 //
 // mongoose.connect(url, { useNewUrlParser: true })
 //   .then(result => {
@@ -71,23 +38,11 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const note = persons.find(note => note.id === id)
-  if (note) {
-    res.json(note)
-  } else {
-    res.status(404).end()
-  }
+  Person.findById(req.params.id).then(person => {
+    res.json(person.toJSON())
+  })
 })
-
-const generateId = () => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => n.id))
-    : 0
-  return maxId + 1
-}
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
@@ -111,6 +66,19 @@ app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id
   Person.deleteOne({_id: id}).then(deletedPerson => {
     res.status(204).end()
+  })
+})
+
+app.put('/api/persons/:id', (req, res) => {
+  const body = req.body
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: 'content missing'
+    })
+  }
+  Person.findOneAndUpdate({_id: body.id}, {$set: {number: body.number}}, {new: true}).then(updatedPerson => {
+    console.log(updatedPerson)
+    res.json(updatedPerson.toJSON())
   })
 })
 
