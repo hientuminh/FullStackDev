@@ -90,3 +90,7 @@ note
 ```
 - Deploying the database backend to production
   - heroku config:set MONGODB_URI=mongodb+srv://fullstack:secred@cluster0-ostce.mongodb.net/note-app?retryWrites=true
+-
+```
+return request.then(response => response.data).catch(error => Promise.reject(error.response))
+```

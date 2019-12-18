@@ -48,8 +48,7 @@ const App = () => {
     } else {
       const phoneBookObject = {
         name: phoneBook.name,
-        number: phoneBook.number,
-        id: persons.length + 1
+        number: phoneBook.number
       }
 
       personService
@@ -59,8 +58,9 @@ const App = () => {
           const messageShow = {type: 'succes', content: `Added ${phoneBook.name}`}
           setMessage(messageShow)
         })
-        .catch(error => {
-          alert('the phonebook was created failed')
+        .catch(response => {
+          const messageShow = {type: 'error', content: `${response.data.error}` }
+          setMessage(messageShow)
         })
     }
     setPhoneBook({name: '', number: ''})
