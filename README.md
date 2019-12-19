@@ -24,8 +24,12 @@ The repository for MERN + GraphQL
     - https://powerful-harbor-41906.herokuapp.com/
 - [x] Saving data to MongoDB
   - https://cloud.mongodb.com/v2/5c7cf3d29ccf640d3d59ef13#metrics/replicaSet/5df85164f2a30bcfa429de94/explorer/phonebook/people/find
-- [ ] Validation and ESLint
+- [x] Validation and ESLint
 ## Part 4: Testing Express server, user administration
+- [x] Structure of backend application, introduction to testing
+- [ ] Testing the backend
+- [ ] User administration
+- [ ] Token authentication
 ## Part 5: Testing React apps, custom hooks
 ## Part 6: State management with Redux
 ## Part 7: React router, styling app with CSS and webpack
