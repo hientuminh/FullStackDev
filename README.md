@@ -29,7 +29,7 @@ The repository for MERN + GraphQL
 - [x] Structure of backend application, introduction to testing
 <details><summary>Content</summary>
 <p>
-```markdown
+```
 ### Project structure
 ### Exercises
 ### Testing Note applications
@@ -41,7 +41,7 @@ The repository for MERN + GraphQL
 - [ ] Testing the backend
 <details><summary>Content</summary>
 <p>
-```markdown
+```
 ### Test environment
 ### supertest
 ### Logger
