@@ -29,22 +29,28 @@ The repository for MERN + GraphQL
 - [x] Structure of backend application, introduction to testing
 <details><summary>Content</summary>
 <p>
+```markdown
 ### Project structure
 ### Exercises
 ### Testing Note applications
 ### Exercises
+```
 </p>
 </details>
+
 - [ ] Testing the backend
 <details><summary>Content</summary>
 <p>
+```markdown
 ### Test environment
 ### supertest
 ### Logger
 ### Intializing the database before tests
 ### Running tests one by one
+```
 </p>
 </details>
+
 - [ ] User administration
 - [ ] Token authentication
 ## Part 5: Testing React apps, custom hooks
