@@ -157,7 +157,26 @@ The repository for MERN + GraphQL
   ```
 </details>
 
-- [ ] Token authentication
+- [x] Token authentication
+<details>
+  <summary>Content</summary>
+
+  ### Limiting creating new notes to logged in users
+  - Using JWT `npm install jsonwebtoken --save`
+
+  ```javascript
+  const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+      return authorization.substring(7)
+    }
+    return null
+  }
+  ```
+  ### Error handling
+  - using errorHandler with JsonWebTokenError
+</details>
+
 ## Part 5: Testing React apps, custom hooks
 ## Part 6: State management with Redux
 ## Part 7: React router, styling app with CSS and webpack
