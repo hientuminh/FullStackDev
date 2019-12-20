@@ -40,3 +40,8 @@ notesRouter.get('/', async (request, response) => {
  response.json(notes.map(note => note.toJSON()))
 })
 ```
+- Structure test
+```
+describe -> test
+         -> describe -> test
+```
