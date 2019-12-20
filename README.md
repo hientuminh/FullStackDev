@@ -39,7 +39,7 @@ The repository for MERN + GraphQL
   ```
 </details>
 
-- [ ] Testing the backend
+- [x] Testing the backend
 <details>
   <summary>Content</summary>
 
@@ -60,7 +60,103 @@ The repository for MERN + GraphQL
   ```
 </details>
 
-- [ ] User administration
+- [x] User administration
+<details>
+  <summary>Content</summary>
+
+  ### References across
+  - User and Note have one-to-many relationship
+  ```javascript
+    users = [
+      {
+        username: 'mluukkai',
+        _id: 123456,
+      },
+      {
+        username: 'hellas',
+        _id: 141414,
+      },
+    ]
+
+    notes = [
+      {
+        content: 'HTML is easy',
+        important: false,
+        _id: 221212,
+        user: 123456,
+      },
+      {
+        content: 'The most important operations of HTTP protocol are GET and POST',
+        important: true,
+        _id: 221255,
+        user: 123456,
+      },
+      {
+        content: 'A proper dinosaur codes with Java',
+        important: false,
+        _id: 221244,
+        user: 141414,
+      },
+    ]
+  ```
+  ### Mongoose schema for users
+  ```javascript
+  const mongoose = require('mongoose')
+
+  const userSchema = new mongoose.Schema({
+    username: String,
+    name: String,
+    passwordHash: String,
+    notes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Note'
+      }
+    ],
+  })
+
+  userSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
+      // the passwordHash should not be revealed
+      delete returnedObject.passwordHash
+    }
+  })
+
+  const User = mongoose.model('User', userSchema)
+
+  module.exports = User
+  ```
+  ```javascript
+  const noteSchema = new mongoose.Schema({
+    content: {
+      type: String,
+      required: true,
+      minlength: 5
+    },
+    date: Date,
+    important: Boolean,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  })
+  ```
+  ### Creating users
+  - Using bcrypt `npm install bcrypt --save`
+  ```javascript
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(body.password, saltRounds)
+  ```
+  ### Populate
+  - The Mongoose join is done with the populate method.
+  ```javascript
+  const users = await User.find({}).populate('notes', { content: 1, date: 1 })
+  ```
+</details>
+
 - [ ] Token authentication
 ## Part 5: Testing React apps, custom hooks
 ## Part 6: State management with Redux
