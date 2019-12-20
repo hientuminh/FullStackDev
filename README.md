@@ -29,8 +29,9 @@ The repository for MERN + GraphQL
 - [x] Structure of backend application, introduction to testing
 <details>
   <summary>Content</summary>
+
   ### Project structure
-  ```
+  ```md
   ### Project structure
   ### Exercises
   ### Testing Note applications
@@ -41,12 +42,21 @@ The repository for MERN + GraphQL
 - [ ] Testing the backend
 <details>
   <summary>Content</summary>
-  ```
+
+  ```md
   ### Test environment
   ### supertest
   ### Logger
   ### Intializing the database before tests
   ### Running tests one by one
+  ### async/await
+  ### async/await in the backend
+  ### More tests and refactoring the backend
+  ### Error handling and async/await
+  ### Optimizing the beforeEach function
+  ### Exercises
+  ### Refactoring tests
+  ### Exercises
   ```
 </details>
 
