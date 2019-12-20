@@ -27,24 +27,27 @@ The repository for MERN + GraphQL
 - [x] Validation and ESLint
 ## Part 4: Testing Express server, user administration
 - [x] Structure of backend application, introduction to testing
-<details><summary>Content</summary>
-```
-### Project structure
-### Exercises
-### Testing Note applications
-### Exercises
-```
+<details>
+  <summary>Content</summary>
+  ### Project structure
+  ```
+  ### Project structure
+  ### Exercises
+  ### Testing Note applications
+  ### Exercises
+  ```
 </details>
 
 - [ ] Testing the backend
-<details><summary>Content</summary>
-```
-### Test environment
-### supertest
-### Logger
-### Intializing the database before tests
-### Running tests one by one
-```
+<details>
+  <summary>Content</summary>
+  ```
+  ### Test environment
+  ### supertest
+  ### Logger
+  ### Intializing the database before tests
+  ### Running tests one by one
+  ```
 </details>
 
 - [ ] User administration
