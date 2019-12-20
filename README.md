@@ -28,19 +28,16 @@ The repository for MERN + GraphQL
 ## Part 4: Testing Express server, user administration
 - [x] Structure of backend application, introduction to testing
 <details><summary>Content</summary>
-<p>
 ```
 ### Project structure
 ### Exercises
 ### Testing Note applications
 ### Exercises
 ```
-</p>
 </details>
 
 - [ ] Testing the backend
 <details><summary>Content</summary>
-<p>
 ```
 ### Test environment
 ### supertest
@@ -48,7 +45,6 @@ The repository for MERN + GraphQL
 ### Intializing the database before tests
 ### Running tests one by one
 ```
-</p>
 </details>
 
 - [ ] User administration
