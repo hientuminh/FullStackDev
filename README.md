@@ -175,9 +175,57 @@ The repository for MERN + GraphQL
   ```
   ### Error handling
   - using errorHandler with JsonWebTokenError
+  ### Exercise
+  - Add authen for bloglist
 </details>
 
 ## Part 5: Testing React apps, custom hooks
+- [x] Login form
+<details>
+  <summary>Content</summary>
+
+  ### Creating new notes
+  - services/login.js
+
+  ```javascript
+  import axios from 'axios'
+  const baseUrl = '/api/login'
+
+  const login = async credentials => {
+    const response = await axios.post(baseUrl, credentials)
+    return response.data
+  }
+
+  export default { login }
+  ```
+  - Condition rendering
+  ```javascript
+  {user === null && loginForm()}
+  {user !== null && noteForm()}
+  ```
+  ### Saving the token to browsers local storage
+  - setItem, getItem, removeItem
+  ```javascript
+  window.localStorage.setItem('name', 'juha tauriainen')
+  ```
+  ### Exercises
+  - Using https://github.com/fullstackopen-2019/bloglist-frontend
+  - Login frontend
+</details>
+
+- [ ] props.children and proptypes
+<details>
+  <summary>Content</summary>
+
+  ```md
+  ### Displaying the login form only when appropriate
+  ### References to components with ref
+  ### One point about components
+  ### PropTypes
+  ### ESlint
+  ```
+</details>
+
 ## Part 6: State management with Redux
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL
