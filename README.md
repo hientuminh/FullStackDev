@@ -177,6 +177,11 @@ The repository for MERN + GraphQL
     - using errorHandler with JsonWebTokenError
     ### Exercise
     - Add authen for bloglist
+      - Adding bcrypt | bcryptjs
+      - Update models and controllers
+      - Add validation
+      - Show more details with populate
+      - Add token and permission
   </details>
 
 ## Part 5: Testing React apps, custom hooks
