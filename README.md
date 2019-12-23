@@ -217,6 +217,7 @@ The repository for MERN + GraphQL
     ### Exercises
     - Using https://github.com/fullstackopen-2019/bloglist-frontend
     - Login frontend
+    - Using backend at `part4/blog`
   </details>
 
 - [ ] props.children and proptypes
