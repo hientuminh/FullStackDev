@@ -190,6 +190,7 @@ The repository for MERN + GraphQL
     <summary>Content</summary>
 
     ### Creating new notes
+    - Using `examples/part5a` as ui and `examples/part4d` as backend
     - services/login.js
 
     ```javascript
