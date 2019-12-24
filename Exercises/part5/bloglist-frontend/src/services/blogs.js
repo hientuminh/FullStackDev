@@ -20,4 +20,20 @@ const createBlog = newObject => {
   return request.then(response => response.data).catch(error => Promise.reject(error.response))
 }
 
-export default { getAll, createBlog, setToken }
+const updateBlog = updateObject => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const request = axios.put(`${baseUrl}/${updateObject.id}`, updateObject, config)
+  return request.then(response => response.data).catch(error => Promise.reject(error.response))
+}
+
+const deleteBlog = blogId => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const request = axios.delete(`${baseUrl}/${blogId}`, config)
+  return request.then(response => response.data).catch(error => Promise.reject(error.response))
+}
+
+export default { getAll, createBlog, updateBlog, deleteBlog, setToken }

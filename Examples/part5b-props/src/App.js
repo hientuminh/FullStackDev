@@ -73,7 +73,7 @@ const App = () => {
 
   const addNote = (event) => {
     event.preventDefault()
-    console.log(noteFormRef.current.toggleVisibility())
+    noteFormRef.current.toggleVisibility()
     const noteObject = {
       content: newNote,
       date: new Date().toISOString(),

@@ -261,6 +261,17 @@ The repository for MERN + GraphQL
       </Togglable>
     </div>
   ```
+  ### Exercise
+  ```javascript
+  <div style={hideWhenVisible}>
+    // button
+  </div>
+  <div style={showWhenVisible}>
+    {props.children}
+    // button
+  </div>
+  ```
+
   </details>
 
 ## Part 6: State management with Redux

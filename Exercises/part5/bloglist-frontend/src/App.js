@@ -4,6 +4,9 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -30,6 +33,8 @@ function App() {
     }
   }, [])
 
+  const blogFormRef = React.createRef()
+
   const handleLogin = async (event) => {
     event.preventDefault()
     const messageShow = {type: '', content: ''}
@@ -54,10 +59,12 @@ function App() {
 
   const handleCreateBlog = (event) => {
     event.preventDefault()
+    blogFormRef.current.toggleVisibility()
     const blogObject = {
       title: title,
       author: author,
-      url: url
+      url: url,
+      likes: 0
     }
     blogService
       .createBlog(blogObject)
@@ -85,71 +92,87 @@ function App() {
     setPassword('')
   }
 
-  const loginForm = () => (
-    <div>
-      <h2>log in to application</h2>
-      <Notification message={message}/>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
+  const handleLikeBlog = (blog) => {
+    const updateBlog = {
+      id: blog.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+    blogService
+      .updateBlog(updateBlog)
+      .then(returnedBlog => {
+        const foundIndex = blogs.findIndex(x => x.id === returnedBlog.id)
+        blogs[foundIndex] = returnedBlog
+        // const newBlogs = [...blogs]
+        setBlogs([...blogs])
+      })
+      .catch(response => {
+        const messageShow = {type: 'error', content: 'There is ISE'}
+        setMessage(messageShow)
+        setTimeout(() => {
+          setMessage({type: '', content: ''})
+        }, 5000)
+      })
+  }
+
+  const handleDeleteBlog = (blog) => {
+    blogService
+      .deleteBlog(blog.id)
+      .then(returnedBlog => {
+        setBlogs(blogs.filter(x => x.id !== blog.id))
+      })
+      .catch(response => {
+        const messageShow = {type: 'error', content: 'There is ISE'}
+        setMessage(messageShow)
+        setTimeout(() => {
+          setMessage({type: '', content: ''})
+        }, 5000)
+      })
+  }
+
+  const loginForm = () => {
+    return (
+      <div>
+        <h2>log in to application</h2>
+        <Notification message={message}/>
+        <Togglable buttonLabel='login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleSubmit={handleLogin}
+            handleUsernameChange={({target}) => setUsername(target.value)}
+            handlePasswordChange={({target}) => setPassword(target.value)}
           />
-        </div>
-        <div>
-          password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
+        </Togglable>
+      </div>
+    )
+  }
 
   const blogForm = () => (
     <div>
-      <form onSubmit={handleCreateBlog}>
-        <div>
-          title:
-            <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-            <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-            <input
-            type="text"
-            value={url}
-            name="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <Togglable buttonLabel='create' ref={blogFormRef}>
+        <BlogForm
+          handleSubmit={handleCreateBlog}
+          handleTitleChange={({ target }) => setTitle(target.value)}
+          handleAuthorChange={({ target }) => setAuthor(target.value)}
+          handleUrlChange={({ target }) => setUrl(target.value)}
+          title={title}
+          author={author}
+          url={url}
+        />
+      </Togglable>
     </div>
   )
 
-  const rows = () => blogs.map(blog =>
-    <Blog key={blog.id} blog={blog} />
+  const rows = () => blogs
+                      .sort((a,b) => (b.likes > a.likes) ? 1 : ((a.likes > b.likes) ? -1 : 0))
+                      .map(blog =>
+    <Blog key={blog.id} blog={blog}
+          handleLikeBlog={handleLikeBlog}
+          handleDeleteBlog={handleDeleteBlog}
+    />
   )
 
   if (user === null) {
