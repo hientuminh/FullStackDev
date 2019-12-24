@@ -224,13 +224,43 @@ The repository for MERN + GraphQL
   <details>
     <summary>Content</summary>
 
-    ```md
     ### Displaying the login form only when appropriate
-    ### References to components with ref
-    ### One point about components
-    ### PropTypes
-    ### ESlint
+
+    ### The components children, aka. props.children
+    - Using props.children to passing component as slot
+    ```javascript
+    <Togglable buttonLabel='login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
     ```
+    ### References to components with ref
+    - How can we access it outside of the component?
+    - The createRef method is used to create a noteFormRef ref, that is assigned to the Togglable component containing the creation note form. The noteFormRef variable acts as a reference to the component.
+    - To recap, the useImperativeHandle function is a React hook, that is used for defining functions in a component which can be invoked from outside of the component.    
+    - noteFormRef.current.toggleVisibility()
+    ### One point about components
+
+    ```javascript
+    <div>
+      <Togglable buttonLabel="1" ref={togglable1}>
+        first
+      </Togglable>
+
+      <Togglable buttonLabel="2" ref={togglable2}>
+        second
+      </Togglable>
+
+      <Togglable buttonLabel="3" ref={togglable3}>
+        third
+      </Togglable>
+    </div>
+  ```
   </details>
 
 ## Part 6: State management with Redux
