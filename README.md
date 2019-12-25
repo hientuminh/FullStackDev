@@ -277,6 +277,57 @@ The repository for MERN + GraphQL
   - `npm add --save-dev eslint-plugin-jest`
   </details>
 
+
+- [ ] Testing react app
+
+  <details>
+    <summary>Content</summary>
+    - Using `npm install --save-dev @testing-library/react @testing-library/jest-dom`
+
+    ### Rendering the component for tests
+
+    - Command: CI=true npm test
+    - the console may issue a warning if you have not installed Watchman
+
+    ### Test file location
+    - In React there are (at least) two different conventions for the test file's location.
+    ### Searching for content in a component
+    ```javascript
+    test('renders content', () => {
+      const note = {
+        content: 'Component testing is done with react-testing-library',
+        important: true
+      }
+
+      const component = render(
+        <Note note={note} />
+      )
+
+      // method 1
+      expect(component.container).toHaveTextContent(
+        'Component testing is done with react-testing-library'
+      )
+
+      // method 2
+      const element = component.getByText(
+        'Component testing is done with react-testing-library'
+      )
+      expect(element).toBeDefined()
+
+      // method 3
+      const div = component.container.querySelector('.note')
+      expect(div).toHaveTextContent(
+        'Component testing is done with react-testing-library'
+      )
+    })
+    ```
+    ### Debug
+    - `component.debug()`
+    ### Clicking buttons in tests
+    - using mock and fireEvent
+    ### Tests for the Togglable component
+    - 
+  </details>
 ## Part 6: State management with Redux
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL
