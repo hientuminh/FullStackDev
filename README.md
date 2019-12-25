@@ -278,7 +278,7 @@ The repository for MERN + GraphQL
   </details>
 
 
-- [ ] Testing react app
+- [x] Testing react app
 
   <details>
     <summary>Content</summary>
@@ -326,7 +326,62 @@ The repository for MERN + GraphQL
     ### Clicking buttons in tests
     - using mock and fireEvent
     ### Tests for the Togglable component
-    - 
+    ```javascript
+    const mockHandler = jest.fn()
+
+    const { getByText } = render(
+      <SimpleBlog blog={blog} onClick={mockHandler}/>
+    )
+
+    const button = getByText('like')
+    fireEvent.click(button)
+    fireEvent.click(button)
+
+    expect(mockHandler.mock.calls.length).toBe(2)
+    ```
+    ### Testing forms
+    - The operating principle of the form is to synchronize the state of the input with the state of its parent React component. It is quite difficult to test the form on its own.
+    - We will use wraper component for it
+    ```javascript
+    const Wrapper = (props) => {
+      const onChange = (event) => {
+        props.state.value = event.target.value
+      }
+
+      return (
+        <NoteForm
+          value={props.state.value}
+          onSubmit={props.onSubmit}
+          handleChange={onChange}
+        />
+      )
+    }
+    ```
+    ### Frontend integration tests
+    - Two challenge: localStore, fetchAPI
+    - The manual mock concept from Jest provides us with a good solution. 
+    - setupTests.js
+    ```javascript
+    import '@testing-library/jest-dom/extend-expect'
+    let savedItems = {}
+
+    const localStorageMock = {
+      setItem: (key, item) => {
+        savedItems[key] = item
+      },
+      getItem: (key) => savedItems[key],
+      clear: () => {
+        savedItems = {}
+      }
+    }
+
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+    ```
+    ### Test coverage
+    > CI=true npm test -- --coverage
+    - Examples/part5c-testing-react-app/coverage/lcov-report/index.html
+    ### Snapshot testing
+    ### E2E Testing
   </details>
 ## Part 6: State management with Redux
 ## Part 7: React router, styling app with CSS and webpack

@@ -39,7 +39,7 @@ const Blog = ({ blog, handleLikeBlog, handleDeleteBlog }) => {
   }
 
   const blogBasicInfo = () => (
-    <div>
+    <div className='info'>
       {blog.title} by <strong>{blog.author}</strong>
     </div>
   )
@@ -49,7 +49,7 @@ const Blog = ({ blog, handleLikeBlog, handleDeleteBlog }) => {
   )
 
   const blogDetailInfo = () => (
-    <div>
+    <div className='details'>
       <p>{blog.id}</p>
       <p>{blog.title}</p>
       <p>{blog.url}</p>
@@ -60,7 +60,7 @@ const Blog = ({ blog, handleLikeBlog, handleDeleteBlog }) => {
   )
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div onClick={toggleVisibility}>
         {visible ?
           blogDetailInfo() :
