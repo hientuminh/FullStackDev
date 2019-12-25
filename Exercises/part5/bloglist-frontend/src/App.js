@@ -16,7 +16,7 @@ function App() {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
-  const [ message, setMessage] = useState({type: '', content: ''})
+  const [ message, setMessage] = useState({ type: '', content: '' })
 
   useEffect(() => {
     blogService
@@ -37,10 +37,10 @@ function App() {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    const messageShow = {type: '', content: ''}
+    const messageShow = { type: '', content: '' }
     setMessage(messageShow)
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login({ username, password })
 
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
@@ -49,10 +49,10 @@ function App() {
       setUsername('')
       setPassword('')
     } catch (e) {
-      const messageShow = {type: 'error', content: 'wrong username or password'}
+      const messageShow = { type: 'error', content: 'wrong username or password' }
       setMessage(messageShow)
       setTimeout(() => {
-        setMessage({type: '', content: ''})
+        setMessage({ type: '', content: '' })
       }, 5000)
     }
   }
@@ -70,14 +70,14 @@ function App() {
       .createBlog(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        const messageShow = {type: 'success', content: `a new blog ${blogObject.title} by ${blogObject.author} added`}
+        const messageShow = { type: 'success', content: `a new blog ${blogObject.title} by ${blogObject.author} added` }
         setMessage(messageShow)
       })
-      .catch(response => {
-        const messageShow = {type: 'error', content: 'There is ISE'}
+      .catch(() => {
+        const messageShow = { type: 'error', content: 'There is ISE' }
         setMessage(messageShow)
         setTimeout(() => {
-          setMessage({type: '', content: ''})
+          setMessage({ type: '', content: '' })
         }, 5000)
       })
     setTitle('')
@@ -85,7 +85,7 @@ function App() {
     setUrl('')
   }
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
     setUsername('')
@@ -108,11 +108,11 @@ function App() {
         // const newBlogs = [...blogs]
         setBlogs([...blogs])
       })
-      .catch(response => {
-        const messageShow = {type: 'error', content: 'There is ISE'}
+      .catch(() => {
+        const messageShow = { type: 'error', content: 'There is ISE' }
         setMessage(messageShow)
         setTimeout(() => {
-          setMessage({type: '', content: ''})
+          setMessage({ type: '', content: '' })
         }, 5000)
       })
   }
@@ -120,14 +120,14 @@ function App() {
   const handleDeleteBlog = (blog) => {
     blogService
       .deleteBlog(blog.id)
-      .then(returnedBlog => {
+      .then(() => {
         setBlogs(blogs.filter(x => x.id !== blog.id))
       })
-      .catch(response => {
-        const messageShow = {type: 'error', content: 'There is ISE'}
+      .catch(() => {
+        const messageShow = { type: 'error', content: 'There is ISE' }
         setMessage(messageShow)
         setTimeout(() => {
-          setMessage({type: '', content: ''})
+          setMessage({ type: '', content: '' })
         }, 5000)
       })
   }
@@ -142,8 +142,8 @@ function App() {
             username={username}
             password={password}
             handleSubmit={handleLogin}
-            handleUsernameChange={({target}) => setUsername(target.value)}
-            handlePasswordChange={({target}) => setPassword(target.value)}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
           />
         </Togglable>
       </div>
@@ -167,13 +167,13 @@ function App() {
   )
 
   const rows = () => blogs
-                      .sort((a,b) => (b.likes > a.likes) ? 1 : ((a.likes > b.likes) ? -1 : 0))
-                      .map(blog =>
-    <Blog key={blog.id} blog={blog}
-          handleLikeBlog={handleLikeBlog}
-          handleDeleteBlog={handleDeleteBlog}
-    />
-  )
+    .sort((a,b) => (b.likes > a.likes) ? 1 : ((a.likes > b.likes) ? -1 : 0))
+    .map(blog =>
+      <Blog key={blog.id} blog={blog}
+        handleLikeBlog={handleLikeBlog}
+        handleDeleteBlog={handleDeleteBlog}
+      />
+    )
 
   if (user === null) {
     return (

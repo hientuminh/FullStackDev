@@ -220,7 +220,7 @@ The repository for MERN + GraphQL
     - Using backend at `part4/blog`
   </details>
 
-- [ ] props.children and proptypes
+- [x] props.children and proptypes
   <details>
     <summary>Content</summary>
 
@@ -271,7 +271,10 @@ The repository for MERN + GraphQL
     // button
   </div>
   ```
-
+  ### PropTypes
+  - `npm install --save prop-types`
+  ### ESLint
+  - `npm add --save-dev eslint-plugin-jest`
   </details>
 
 ## Part 6: State management with Redux
