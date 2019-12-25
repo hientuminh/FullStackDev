@@ -7,11 +7,14 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { useField } from './hooks'
 
 function App() {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  // const [username, setUsername] = useState('')
+  const username = useField('text')
+  const password = useField('password')
+  // const [password, setPassword] = useState('')
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -40,14 +43,16 @@ function App() {
     const messageShow = { type: '', content: '' }
     setMessage(messageShow)
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login({ username: username.value, password: password.value })
 
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       )
       setUser(user)
-      setUsername('')
-      setPassword('')
+      // setUsername('')
+      username.reset()
+      password.reset()
+      // setPassword('')
     } catch (e) {
       const messageShow = { type: 'error', content: 'wrong username or password' }
       setMessage(messageShow)
@@ -88,8 +93,10 @@ function App() {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
-    setUsername('')
-    setPassword('')
+    // setUsername('')
+    username.reset()
+    password.reset()
+    // setPassword('')
   }
 
   const handleLikeBlog = (blog) => {
@@ -142,8 +149,8 @@ function App() {
             username={username}
             password={password}
             handleSubmit={handleLogin}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleUsernameChange={(event) => username.onChange(event)}
+            handlePasswordChange={(event) => password.onChange(event)}
           />
         </Togglable>
       </div>

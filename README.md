@@ -383,6 +383,60 @@ The repository for MERN + GraphQL
     ### Snapshot testing
     ### E2E Testing
   </details>
+- [ ] Custom hooks
+  <details>
+    <summary>Content</summary>
+
+    ### Custom hooks
+    - React offer 10 built-in hooks
+    - Custom hooks must start with the word `use`
+    ### Spread attributes
+    - Since the name object has exactly all of the attributes that the input element expects to receive as props, we can pass the props to the element using the spread syntax in the following way
+    ```javascript
+    <input {...name} />
+    const App = () => {
+      const name = useField('text')
+      const born = useField('date')
+      const height = useField('number')
+
+      return (
+        <div>
+          <form>
+            name: 
+            <input  {...name} /> 
+            <br/> 
+            birthdate:
+            <input {...born} />
+            <br /> 
+            height:
+            <input {...height} />
+          </form>
+          <div>
+            {name.value} {born.value} {height.value}
+          </div>
+        </div>
+      )
+    }
+    ```
+    ### Revisited hook
+    > npm install --save eslint-plugin-react-hooks 
+    ```javascript
+    module.exports = {
+      // ...
+      "plugins": [
+        // ...
+        "react-hooks"
+      ],
+      "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        // ...
+      }
+    }
+    - https://github.com/rehooks/awesome-react-hooks
+    - https://overreacted.io/why-do-hooks-rely-on-call-order/
+    - https://usehooks.com/
+    ```
+  </details>
 ## Part 6: State management with Redux
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL
