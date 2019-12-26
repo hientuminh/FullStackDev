@@ -438,5 +438,105 @@ The repository for MERN + GraphQL
     ```
   </details>
 ## Part 6: State management with Redux
+- [x] Flux-architecture and Redux
+  <details>
+    <summary>Content</summary>
+
+    ### Flux-architecture
+    - Facebook developed the Flux- architecture to make state management easier. In Flux, the state is separated completely from the React-components into its own stores. State in the store is not changed directly, but with different actions.
+    - [Flux Offical](https://facebook.github.io/flux/docs/in-depth-overview/)
+    ### Redux
+    - Facebook has an implementation for Flux, but we will be using the Redux - library. It works with the same principle, but is a bit simpler. Facebook also uses Redux now instead of their original Flux.
+    - [Redux offical](https://redux.js.org/)
+    > npm install redux --save
+    - The impact of the action to the state of the application is defined using a reducer.
+    - Reducer is never supposed to be called directly from the applications code. Reducer is only given as a parameter to the createStore-function which creates the store
+    ```javascript
+    import { createStore } from 'redux'
+    const counterReducer = (state = 0, action) => {
+      // ...
+    }
+    const store = createStore(counterReducer)
+    ```
+    - The third important method the store has is subscribe, which is used to create recall functions the store calls when its state is changed.
+    ### Pure functions, immutable
+    ```javascript
+    const noteReducer = (state = [], action) => {
+      if (action.type === 'NEW_NOTE') {
+        state.push(action.data)
+        return state
+      }
+
+      return state
+    }
+    ```
+    - The application seems to be working, but the reducer we have declared is bad. It breaks the basic assumption of Redux reducer that reducers must be pure functions. A reducer state must be composed of immutable objects. If there is a change in the state, the old object is not changed, but it is replaced with a new, changed, object. This is exactly what we did with the new reducer: the old array is replaced with the new.
+    ### Array spread syntax
+    ```javascript
+    case 'NEW_NOTE':
+      return [...state, action.data]
+    ```
+    ### DeepFreeze
+    ```javascript
+    test('good is incremented', () => {
+      const action = {
+        type: 'GOOD'
+      }
+      const state = initialState
+
+      deepFreeze(state)
+      const newState = counterReducer(state, action)
+      expect(newState).toEqual({
+        good: 1,
+        ok: 0,
+        bad: 0
+      })
+    })
+    ```
+    ### Uncontrolled form
+    - The implementation of both functionalities is straightforward. It is noteworthy that we have not bound the state of the form fields to the state of the App component like we have previously done. React calls this kind of form uncontrolled.
+    - https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/
+    - https://travisnguyen.net/reactjs/2018/04/17/reactjs-form-uncontrolled-controlled/
+    - https://techblog.vn/reactjs-uncontrolled-vs-controlled-forms
+    ### Action creators
+    ```javascript
+    const createNote = (content) => {
+      return {
+        type: 'NEW_NOTE',
+        data: {
+          content,
+          important: false,
+          id: generateId()
+        }
+      }
+    }
+    const addNote = (event) => {
+      event.preventDefault()
+      const content = event.target.note.value
+      noteStore.dispatch(createNote(content))
+      event.target.note.value = ''
+    }
+    ```
+    ### Passing the state using props
+    ```javascript
+    import React from 'react'
+    import ReactDOM from 'react-dom'
+    import { createStore } from 'redux'
+    import App from './App'
+    import noteReducer from './reducers/noteReducer'
+
+    const store = createStore(noteReducer)
+
+    const renderApp = () => {
+      ReactDOM.render(
+        <App store={store}/>,
+        document.getElementById('root')
+      )
+    }
+
+    renderApp()
+    store.subscribe(renderApp)
+    ```
+  </details>
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL
