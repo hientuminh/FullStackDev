@@ -383,7 +383,7 @@ The repository for MERN + GraphQL
     ### Snapshot testing
     ### E2E Testing
   </details>
-- [ ] Custom hooks
+- [x] Custom hooks
   <details>
     <summary>Content</summary>
 
