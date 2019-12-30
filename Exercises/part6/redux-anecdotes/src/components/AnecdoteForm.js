@@ -1,13 +1,15 @@
 import React from 'react'
 import { createNewAnec } from '../reducers/anecdoteReducer'
+import { createNewNotification } from '../reducers/notificationReducer'
 
 const AnecdoteForm = ({store}) => {
 
   const addAnecdote = (event) => {
     event.preventDefault()
-    const dote = event.target.dote.value
+    const content = event.target.dote.value
     event.target.dote.value = ''
-    store.dispatch(createNewAnec(dote))
+    store.dispatch(createNewAnec(content))
+    store.dispatch(createNewNotification(content))
   }
 
   return (

@@ -538,5 +538,70 @@ The repository for MERN + GraphQL
     store.subscribe(renderApp)
     ```
   </details>
+- [ ] Many reducers
+  <details>
+    <summary>Content</summary>
+
+    ### Combine
+    ```javascript
+    import { createStore, combineReducers } from 'redux'
+
+    const reducer = combineReducers({
+      notes: noteReducer,
+      filter: filterReducer
+    })
+    ```
+    ### Store with complex state
+    ```javascript
+        all          <input type="radio" name="filter"
+      onChange={filterSelected('ALL')} />
+    important    <input type="radio" name="filter"
+      onChange={filterSelected('IMPORTANT')} />
+    nonimportant <input type="radio" name="filter"
+      onChange={filterSelected('NONIMPORTANT')} />
+    ```
+    ### Connect
+    - To get rid of this unpleasantness we will use the connect function provided by the React Redux library. This is currently the de facto solution for passing the Redux store to React components.
+    > npm install --save react-redux
+    ```javascript
+    <Provider store={store}>
+      <App />
+    </Provider>
+    ```
+    - The component needs the list of notes and the value of the filter from the Redux store. The connect function accepts a so-called mapStateToProps function as its first parameter. The function can be used for defining the props of the connected component that are based on the state of the Redux store.
+    ### Referencing action creators passed as props
+    ```javascript
+    const mapDispatchToProps = dispatch => {
+      return {
+        createNote: value => {
+          dispatch(createNote(value))
+        }
+      }
+    }
+
+    export default connect(
+      null,
+      mapDispatchToProps
+    )(NewNote)
+    ```
+    - Previously mapStateToProps was simply used for selecting pieces of state from the store, but in this case we are also using the notesToShow function to map the state into the desired filtered list of notes. The new version of notesToShow receives the store's state in its entirety, and selects an appropriate piece of the store that is passed to the component. Functions like this are called selectors.
+    - Our new Notes component is almost entirely focused on rendering notes and is quite close to being a so-called presentational component. According to the description provided by Dan Abramov, presentation components:
+      - Are concerned with how things look.
+      - May contain both presentational and container components inside, and usually have some DOM markup and styles of their own.
+      - Often allow containment via props.children.
+      - Have no dependencies on the rest of the app, such as Redux actions or stores.
+      - Don’t specify how the data is loaded or mutated.
+      - Receive data and callbacks exclusively via props.
+      - Rarely have their own state (when they do, it’s UI state rather than data).
+      - Are written as functional components unless they need state, lifecycle hooks, or performance optimizations.
+    - Fits the description of a container component. According to the description provided by Dan Abramov, container components:
+      - Are concerned with how things work.
+      - May contain both presentational and container components inside but usually don’t have any DOM markup of their own except for some wrapping divs, and never have any styles.
+      - Provide the data and behavior to presentational or other container components.
+      - Call Redux actions and provide these as callbacks to the presentational components.
+      - Are often stateful, as they tend to serve as data sources.
+      - Are usually generated using higher order components such as connect from React Redux, rather than written by hand.
+
+  </details>
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL
