@@ -7,7 +7,7 @@ const Notification = (props) => {
   if (messgage.length > 0) {
     setTimeout(() => {
       props.deleteNotification()
-    }, 10000)
+    }, 5000)
   }
 
   const display_status = (messgage.length > 0) ? '': 'none'

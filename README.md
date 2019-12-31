@@ -538,7 +538,7 @@ The repository for MERN + GraphQL
     store.subscribe(renderApp)
     ```
   </details>
-- [ ] Many reducers
+- [x] Many reducers, connect
   <details>
     <summary>Content</summary>
 
@@ -602,6 +602,99 @@ The repository for MERN + GraphQL
       - Are often stateful, as they tend to serve as data sources.
       - Are usually generated using higher order components such as connect from React Redux, rather than written by hand.
 
+  </details>
+- [ ] Commnicating with server in a redux application
+  <details>
+    <summary>Content</summary>
+ 
+    ### Exercises
+    ```javascript
+    import noteService from './services/notes'
+
+    const reducer = combineReducers({
+      notes: noteReducer,
+      filter: filterReducer,
+    });
+
+    const store = createStore(reducer);
+
+    noteService.getAll().then(notes =>
+      notes.forEach(note => {
+        store.dispatch({ type: 'NEW_NOTE', data: note })
+      })
+    )
+    ```
+    - Other
+    ```javascript
+    import noteReducer, { initializeNotes } from './reducers/noteReducer'
+    // ...
+
+    noteService.getAll().then(notes =>
+      store.dispatch(initializeNotes(notes))
+    )
+    ```
+    - Why didn't we use await in place of promises and event handlers (registered to `then` -methods):
+    > Await only works inside async functions, and the code in index.js is not inside a function, so due to the simple nature of the operation, we'll abstain from using async this time.
+    - Improve
+    ```javascript
+    import React, { useEffect } from 'react'
+    import { connect } from 'react-redux'
+    import NewNote from './components/NewNote'
+    import Notes from './components/Notes'
+    import VisibilityFilter from './components/VisibilityFilter'
+    import noteService from './services/notes'
+    import { initializeNotes } from './reducers/noteReducer'
+
+    const App = (props) => {
+      useEffect(() => {
+        noteService
+          .getAll().then(notes => props.initializeNotes(notes))
+      },[])
+
+      return (
+        <div>
+          <NewNote />
+          <VisibilityFilter />
+          <Notes />
+        </div>
+      )
+    }
+
+    export default connect(null, { initializeNotes })(App)
+    ```
+    - New Note
+    ```javascript
+    import React from 'react'
+    import { connect } from 'react-redux'
+    import { createNote } from '../reducers/noteReducer'
+    import noteService from '../services/notes'
+
+    const NewNote = (props) => {
+      const addNote = async (event) => {
+        event.preventDefault()
+        const content = event.target.note.value
+        event.target.note.value = ''
+        const newNote = await noteService.createNew(content)
+        props.createNote(newNote)
+      }
+
+      return (
+        // ...
+      )
+    }
+
+    export default connect(null, { createNote } )(NewNote)
+    // createNote in noteReducer
+    export const createNote = (data) => {
+      return {
+        type: 'NEW_NOTE',
+        data,
+      }
+    }
+    ```
+    ### Asynchronous actions and redux thunk
+    - Both components would only use the function provided to them as a prop without caring about the communication with the server that is happening in the background.
+    > npm install --save redux-thunk
   </details>
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL

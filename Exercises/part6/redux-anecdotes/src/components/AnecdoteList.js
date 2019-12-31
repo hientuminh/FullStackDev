@@ -32,6 +32,8 @@ const AnecdoteList = (props) => {
 const anecdoteToShow = (state) => {
   const anecdotes = state.anecdote
   const filter = state.filter
+  console.log(filter)
+  console.log(anecdotes)
   return anecdotes
           .sort((a,b) => (b.votes > a.votes) ? 1 : ((a.votes > b.votes) ? -1 : 0))
           .filter(ano => ano.content.includes(filter))
