@@ -603,7 +603,7 @@ The repository for MERN + GraphQL
       - Are usually generated using higher order components such as connect from React Redux, rather than written by hand.
 
   </details>
-- [ ] Commnicating with server in a redux application
+- [x] Commnicating with server in a redux application
   <details>
     <summary>Content</summary>
  
@@ -695,6 +695,13 @@ The repository for MERN + GraphQL
     ### Asynchronous actions and redux thunk
     - Both components would only use the function provided to them as a prop without caring about the communication with the server that is happening in the background.
     > npm install --save redux-thunk
+    ### Redux DevTools
+    > npm install --save redux-devtools-extension
+    - Add redux-thunk
+    - Create store.js
+    - move store, reducer from index.js to store.js
+    - Move services in component to reducer
+    - Using dispatch in reducer to call other reducer or setTimeout
   </details>
 ## Part 7: React router, styling app with CSS and webpack
 ## Part 8: GraphQL

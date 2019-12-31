@@ -5,9 +5,9 @@ import { deleteNotification } from '../reducers/notificationReducer'
 const Notification = (props) => {
   const messgage = props.notification
   if (messgage.length > 0) {
-    setTimeout(() => {
-      props.deleteNotification()
-    }, 5000)
+    // setTimeout(() => {
+    //   props.deleteNotification()
+    // }, 5000)
   }
 
   const display_status = (messgage.length > 0) ? '': 'none'

@@ -4,11 +4,8 @@ import { upVote } from '../reducers/anecdoteReducer'
 import { upVoteNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = (props) => {
-  // const anecdoteState = store.getState().anecdote
-  // const filterState = store.getState().filter
-
   const vote = (anecdote) => {
-    props.upVote(anecdote.id)
+    props.upVote(anecdote)
     props.upVoteNotification(anecdote.content)
   }
 
@@ -32,8 +29,6 @@ const AnecdoteList = (props) => {
 const anecdoteToShow = (state) => {
   const anecdotes = state.anecdote
   const filter = state.filter
-  console.log(filter)
-  console.log(anecdotes)
   return anecdotes
           .sort((a,b) => (b.votes > a.votes) ? 1 : ((a.votes > b.votes) ? -1 : 0))
           .filter(ano => ano.content.includes(filter))

@@ -2,7 +2,7 @@
 const notificationReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_NEW_NOTFICATION':
-      return state.concat(`you added new note with '${action.data.content}'`)
+      return state.concat(action.data.content)
     case 'UPVOTE_NOTFICATION':
       return state.concat(`you voted '${action.data.content}'`)
     case 'REMOVE_NOTFICATION':
@@ -15,17 +15,17 @@ const notificationReducer = (state = [], action) => {
   return state
 }
 
-export const createNewNotification = (content) => {
-  return {
-    type: 'ADD_NEW_NOTFICATION',
-    data: { content }
+export const createNewNotification = (content, time) => {
+  return dispatch => {
+    dispatch({type: 'ADD_NEW_NOTFICATION',data: { content: content }})
+    setTimeout(() => { dispatch({type: 'REMOVE_NOTFICATION'}) } , 5000)
   }
 }
 
 export const upVoteNotification = (content) => {
-  return {
-    type: 'UPVOTE_NOTFICATION',
-    data: { content }
+  return dispatch => {
+    dispatch({type: 'UPVOTE_NOTFICATION',data: { content: content }})
+    setTimeout(() => { dispatch({type: 'REMOVE_NOTFICATION'}) } , 5000)
   }
 }
 
