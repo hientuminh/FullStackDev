@@ -1,12 +1,14 @@
 
-const notificationReducer = (state = '' , action) => {
+const notificationReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_NEW_NOTFICATION':
-      return `you added new note with '${action.data.content}'`
+      return state.concat(`you added new note with '${action.data.content}'`)
     case 'UPVOTE_NOTFICATION':
-      return `you voted '${action.data.content}'`
+      return state.concat(`you voted '${action.data.content}'`)
     case 'REMOVE_NOTFICATION':
-      return ''
+      const new_state = [...state]
+      new_state.shift()
+      return new_state
     default:
       return state
   }
