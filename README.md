@@ -704,4 +704,77 @@ The repository for MERN + GraphQL
     - Using dispatch in reducer to call other reducer or setTimeout
   </details>
 ## Part 7: React router, styling app with CSS and webpack
+- [x] React router
+  <details>
+    <summary>Content</summary>
+
+    ### React router
+    > npm install --save react-router-dom
+    ```javascript
+    import {
+      BrowserRouter as Router,
+      Route, Link, Redirect, withRouter
+    } from 'react-router-dom'
+
+    const App = () => {
+
+      const padding = { padding: 5 }
+
+      return (
+        <div>
+          <Router>
+            <div>
+              <div>
+                <Link style={padding} to="/">home</Link>
+                <Link style={padding} to="/notes">notes</Link>
+                <Link style={padding} to="/users">users</Link>
+              </div>
+              <Route exact path="/" render={() => <Home />} />
+              <Route path="/notes" render={() => <Notes />} />
+              <Route path="/users" render={() => <Users />} />
+            </div>
+          </Router>
+        </div>
+      )
+    }
+    ```
+    - BrowserRouter is a Router that uses the HTML5 history API (pushState, replaceState and the popState event) to keep your UI in sync with the URL.
+    ### Parameterized route
+    ### withRouter and history
+    - There are a few notable things about the implementation of the form. When logging in, we call the function onSubmit, which calls a method called push of the history-object received by the component as a prop. The command props.history.push('/') results in the address bar of the browser changing its address to /thereby making the application render the respective component, which in this case is Home.
+    - The component gets access to the history-prop after it is "wrapped" by the function withRouter.
+    ```javascript
+    const LoginWithNoHistory = (props) => {
+      const onSubmit = (event) => {
+        event.preventDefault()
+        props.onLogin('mluukkai')
+        props.history.push('/')
+      }
+
+      return (
+        <div>
+          <h2>login</h2>
+          <form onSubmit={onSubmit}>
+            <div>
+              username: <input />
+            </div>
+            <div>
+              password: <input type='password' />
+            </div>
+            <button type="submit">login</button>
+          </form>
+        </div>
+      )
+    }
+
+    const Login = withRouter(LoginWithNoHistory)
+    ```
+
+    ### redirect
+    ```javascript
+    <Route path="/users" render={() =>
+      user ? <Users /> : <Redirect to="/login" />
+    } />
+    ```
+  </details>
 ## Part 8: GraphQL
