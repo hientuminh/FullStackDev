@@ -813,12 +813,129 @@ The repository for MERN + GraphQL
     `
     ```
   </details>
-- [ ] Webpack
+- [x] Webpack
   <details>
     <summary>Content</summary>
 
     ### Bundling
-    -
+    - build directory
+    ```md
+    ├── asset-manifest.json
+    ├── favicon.ico
+    ├── index.html
+    ├── manifest.json
+    ├── precache-manifest.8082e70dbf004a0fe961fc1f317b2683.js
+    ├── service-worker.js
+    └── static
+        ├── css
+        │   ├── main.f9a47af2.chunk.css
+        │   └── main.f9a47af2.chunk.css.map
+        └── js
+            ├── 1.578f4ea1.chunk.js
+            ├── 1.578f4ea1.chunk.js.map
+            ├── main.8209a8f2.chunk.js
+            ├── main.8209a8f2.chunk.js.map
+            ├── runtime~main.229c360f.js
+            └── runtime~main.229c360f.js.map
+    ```
+    > npm installl --save-dev webpack webpack-cli
+    ### Configuration file
+    ```javascript
+    const path = require('path')
+
+    const config = {
+      entry: './src/index.js',
+      output: {
+        path: path.resolve(__dirname, 'build'),
+        filename: 'main.js'
+      }
+    }
+
+    module.exports = config
+    ```
+    ### Building React
+    > npm install --save react react-dom
+    ### Loaders
+    ```javascript
+    {
+      test: /\.js$/,
+      loader: 'babel-loader',
+      query: {
+        presets: ['@babel/preset-react']
+      }
+    }
+    ```
+    > npm install @babel/core babel-loader @babel/preset-react --save-dev
+    - It's worth noting that if the bundled application's source code uses async/await, the browser will not render anything on some browsers. Googling the error message in the console will shed some light on the issue. We have to install one more missing dependency, that is @babel/polyfill:
+    > npm install --save @babel/polyfill
+    ### Transpilers
+    - The process of transforming code from one form of JavaScript to another is called transpiling. The general definition of the term is to compile source code by transforming it from one language to another.
+    - The transpilation process that is executed by Babel is defined with plugins. In practice, most developers use ready-made presets that are groups of pre-configured plugins.
+    - Currently we are using the @babel/preset-react preset for transpiling the source code of our application. Let's add the @babel/preset-env plugin that contains everything needed to take code using all of the latest features and transpile it to code that is compatible with the ES5 standard:
+    ```javascript
+    {
+      test: /\.js$/,
+      loader: 'babel-loader',
+      query: {
+        presets: ['@babel/preset-env', '@babel/preset-react']
+      }
+    }
+    ```
+    - This will cause the transpilation process to break:
+    ```javascript
+    {
+      test: /\.css$/,
+      loaders: ['style-loader', 'css-loader'],
+    }
+    ```
+    > npm install style-loader css-loader --save-dev
+    ### Webpack-dev-server
+    - The current configuration makes it possible to develop our application but the workflow is awful (to the point where it resembles the development workflow with Java). Every time we make a change to the code we have to bundle it and refresh the browser in order to test the code.
+    > npm install --save-dev webpack-dev-server
+    ### Minifying the code
+    - UglifyJS
+    ### Development and production configuration
+    > npx static-server
+    ```javascript
+    const path = require('path')
+    const webpack = require('webpack')
+
+    const config = (env, argv) => {
+      console.log('argv', argv.mode)
+
+      const backend_url = argv.mode === 'production'
+        ? 'https://radiant-plateau-25399.herokuapp.com/api/notes'
+        : 'http://localhost:3001/notes'
+
+      return {
+        entry: './src/index.js',
+        output: {
+          path: path.resolve(__dirname, 'build'),
+          filename: 'main.js'
+        },
+        devServer: {
+          contentBase: path.resolve(__dirname, 'build'),
+          compress: true,
+          port: 3000,
+        },
+        devtool: 'source-map',
+        module: {
+          // ...
+        },
+        plugins: [
+          new webpack.DefinePlugin({
+            BACKEND_URL: JSON.stringify(backend_url)
+          })
+        ]
+      }
+    }
+
+    module.exports = config
+    ```
+    ### Polyfill
+    - Our application is finished and works with all relatively recent versions of modern browsers, with the exception of Internet Explorer. The reason for this is that because of axios our code uses Promises, and no existing version of IE supports them:
+    - The polyfill provided by the promise-polyfill library is easy to use, we simply have to add the following to our existing application code:
+
   </details>
 
 ## Part 8: GraphQL
