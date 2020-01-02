@@ -777,4 +777,48 @@ The repository for MERN + GraphQL
     } />
     ```
   </details>
+- [ ] More about styles
+  <details>
+    <summary>Content</summary>
+
+    ### Ready-made UI libraries
+    > npm install --save react-bootstrap
+
+    > npm install --save semantic-ui-react
+
+    > import { Table } from 'react-bootstrap'
+    ### Closing thoughts
+    - Instead of using the React Bootstrap library, we could have just as well used Bootstrap directly by defining CSS classes to our application's HTML elements. Instead of defining the table with the Table component:
+    ```javascript
+    ```
+    ### Other UI frameworks
+    - [Material](http://www.material-ui.com/)
+    - [Bulma](https://bulma.io/)
+    - [Ant](https://ant.design/)
+    - [Zurb](https://foundation.zurb.com/)
+    ### Styled components
+    > 
+    ```javascript
+    const Button = styled.button`
+      background: Bisque;
+      font-size: 1em;
+      margin: 1em;
+      padding: 0.25em 1em;
+      border: 2px solid Chocolate;
+      border-radius: 3px;
+    `
+
+    const Input = styled.input`
+      margin: 0.25em;
+    `
+    ```
+  </details>
+- [ ] Webpack
+  <details>
+    <summary>Content</summary>
+
+    ### Bundling
+    -
+  </details>
+
 ## Part 8: GraphQL
