@@ -1043,4 +1043,31 @@ The repository for MERN + GraphQL
     - Useful libraries and interesting links: immutable.js, remmber, Immer, redux-saga
     - https://reactpatterns.com/
   </details>
+- [ ] Exercise (not yet)
 ## Part 8: GraphQL
+- [ ] GraphQL-server
+  <details>
+    <summary>Content</summary>
+
+    ### Schemas and queries
+    - In the recent years GraphQL, developed by Facebook, has become popular for communication between web applications and servers.
+    - The main principle of GraphQL is, that the code on the browser forms a query describing the data wanted, and sends it to the API with an HTTP POST request. Unlike REST, all GraphQL queries are sent to the same address, and their type is POST.
+
+  </details>
+- [ ] React and GraphQL
+  <details>
+    <summary>Content</summary>
+  </details>
+- [ ] Database and user administration
+  <details>
+    <summary>Content</summary>
+  </details>
+- [ ] Login and updateing the cache
+  <details>
+    <summary>Content</summary>
+  </details>
+- [ ] Fragments and subcriptions
+  <details>
+    <summary>Content</summary>
+  </details>
+  
