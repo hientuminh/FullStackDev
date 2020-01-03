@@ -777,7 +777,7 @@ The repository for MERN + GraphQL
     } />
     ```
   </details>
-- [ ] More about styles
+- [x] More about styles
   <details>
     <summary>Content</summary>
 
@@ -937,5 +937,110 @@ The repository for MERN + GraphQL
     - The polyfill provided by the promise-polyfill library is easy to use, we simply have to add the following to our existing application code:
 
   </details>
+- [x] Class components, E2E-testing
+  <details>
+    <summary>content</summary>
 
+    ### Class components
+    ```javascript
+    import React from 'react'
+
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+
+        this.state = {
+          anecdotes: [],
+          current: 0
+        }
+      }
+
+      componentDidMount = () => {
+        axios.get('http://localhost:3001/anecdotes').then(response => {
+          this.setState({ anecdotes: response.data })
+        })
+      }
+
+      handleClick = () => {
+        const current = Math.round(
+          Math.random() * this.state.anecdotes.length
+        )
+        this.setState({ current })
+      }
+
+      render() {
+        if (this.state.anecdotes.length === 0 ) {
+          return <div>no anecdotes...</div>
+        }
+
+        return (
+          <div>
+            <h1>anecdote of the day</h1>
+            <div>{this.state.anecdotes[this.state.current].content}</div>
+            <button onClick={this.handleClick}>next</button>
+          </div>
+        )
+      }
+    }
+
+    export default App
+    ```
+    ### End to end testing of the application
+    - In the year 2018 a software library called **Cypress** has quickly grown in favor in E2E-testing. Cypress is exceptionally easy to use. The amount of legwork one has to do compared to using, e.g. Selenium, is practically non existent. Cypress' way of operating differs radically from most libraries used for E2E-testing. This is because Cypress-tests are all run entirely within the browser. With other approaches the tests are in a Node-process, which is connected to the browser through the APIs that it offers
+    ```javascript
+    describe('Note app',  function() {
+      // ...
+
+      it('login form can be opened', function() {
+        cy.visit('http://localhost:3000')
+        cy.contains('log in')
+          .click()
+      })
+    })
+    ```
+    ### Controlling the state of the database
+    ```javascript
+    describe('Note app', function() {
+      beforeEach(function() {
+        cy.request('POST', 'http://localhost:3001/api/testing/reset')
+        const user = {
+          name: 'Matti Luukkainen',
+          username: 'mluukkai',
+          password: 'salainen'
+        }
+        cy.request('POST', 'http://localhost:3001/api/users/', user)
+        cy.visit('http://localhost:3000')
+      })
+
+      it('front page can be opened', function() {
+        cy.contains('Notes')
+      })
+    })
+    ```
+  </details>
+- [x] Miscellaneous
+  <details>
+    <summary>Content</summary>
+
+    ### Organization of code in React application
+    - https://medium.com/hackernoon/the-100-correct-way-to-structure-a-react-app-or-why-theres-no-such-thing-3ede534ef1ed
+    - Directory: components, reducers, services, ...
+    ### Frontend and backend in the same repository
+    - Using one "single-repository-code" with buildpack
+    ### Changes on the server
+    - WebSockets
+    ### On the role of React in applications
+    ### Security
+    - OWSAP
+    - Snyk
+    - Helmet to backend
+    ### Current trends
+    - Typed versions of JS => TypeScript
+    - Server side rendering
+    - PWA
+    - Microservice architecture: A microservice architecture (microservices) is a way of composing the backend of an application from many separate, independent services, which communicate with each other over the network. An individual microservice's purpose is to take care of a particular logical functional whole. In a pure microservice architecture the services do not use a shared database.
+    - Serverless
+    - Useful libraries and interesting links: immutable.js, remmber, Immer, redux-saga
+    - https://reactpatterns.com/
+  </details>
 ## Part 8: GraphQL
