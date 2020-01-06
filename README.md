@@ -1045,14 +1045,165 @@ The repository for MERN + GraphQL
   </details>
 - [ ] Exercise (not yet)
 ## Part 8: GraphQL
-- [ ] GraphQL-server
+- [x] GraphQL-server
   <details>
     <summary>Content</summary>
 
     ### Schemas and queries
     - In the recent years GraphQL, developed by Facebook, has become popular for communication between web applications and servers.
-    - The main principle of GraphQL is, that the code on the browser forms a query describing the data wanted, and sends it to the API with an HTTP POST request. Unlike REST, all GraphQL queries are sent to the same address, and their type is POST.
+    - The GraphQL philosophy is very different from REST. REST is resource based. Every resource, for example a user has its own address which identifies it, for example /users/10. All operations done to the resource are done with HTTP requests to its URL. The action depends on the used HTTP-method.
+    - The main principle of GraphQL is, that the code on the browser forms **a query describing the data wanted**, and sends it to the API with an HTTP POST request. Unlike REST, all GraphQL queries are sent to the same address, and their type is POST.
+    - In the heart of all GraphQL applications is a schema, which describes the data sent between client and the server. The initial schema for our phonebook is as follows:
+    ```javascript
+    type Person {
+      name: String!
+      phone: String
+      street: String!
+      city: String!
+      id: ID! 
+    }
 
+    type Query {
+      personCount: Int!
+      allPersons: [Person!]!
+      findPerson(name: String!): Person
+    }
+    ```
+    - The schema describles 2 types. The first type, Person, determines that persons have five fields. Four of the fields are type String, which is one of the scalar types of GraphQL. All of the String fields, except phone, must be given a value. This is marked by the exclamation mark on the schema. The type of the field id is ID. ID fields are strings, but GraphQL ensures they are unique. The second type is a Query. Practically every GraphQL schema describes a Query, which tells what kind of queries can be made to the API.
+    - Despite its name, GraphQL does not actually have anything to do with databases. It does not care how the data is saved. The data a GraphQL API uses can be saved into a relational database, document database, or to other servers which GraphQL-server can access with for example REST.
+    ### Apllo server
+    > npm install --save apollo-server graphql
+    - The heart of the code is an ApolloServer, which is given two parameters
+    ```javascript
+    const server = new ApolloServer({
+      typeDefs, // The first parameter, typeDefs, contains the GraphQL schema.
+      resolvers, //The second parameter is an object, which contains the resolvers of the server. These are the code, which defines how GraphQL queries are responded to.
+    })
+    ```
+    ### GraphQL-playground
+    > node index.js
+    ```json
+    query {
+      allPersons {
+        name,
+        phone
+      }
+    }
+    ```
+    ### Parameters of a resolver
+    - A GraphQL-server must define resolvers for each field of each type in the schema. We have so far only defined resolvers for fields of the type Query, so for each query of the application.
+    ```javascript
+    const resolvers = {
+      Query: {
+        ...
+      },
+      Person: {
+        name: (root) => root.name,
+        phone: (root) => root.phone,
+        street: (root) => root.street,
+        city: (root) => root.city,
+        id: (root) => root.id,
+      }
+    }
+    ```
+    ### Object within an object
+    - So every time a Person object is returned, the fields name, phone and id are returned using their default resolvers, but the field address is formed by using a self defined resolver. The parameter root of the resolver function is the person-object, so the street and the city of the address can be taken from its fields.
+    ```javascript
+    const resolvers = {
+      Query: {
+        ...
+      },
+      Person: {
+        address: (root) => {
+          return {
+            street: root.street,
+            city: root.city,
+            country: 'VietNam'
+          }
+        }
+      }
+    }
+    ```
+    ### Mutation
+    - Let's add functionality for adding new persons to the phonebook. In GraphQL, all operations which cause a change are done with mutations. Mutations are described in the schema as the keys of type Mutation. The schema for a mutation for adding a new person looks as follows:
+    ```javascript
+    type Mutation {
+      addPerson(
+        name: String!
+        phone: String
+        street: String!
+        city: String!
+      ): Person
+    }
+    const resolvers = {
+      // ...
+      Mutation: {
+        addPerson: (root, args) => {
+          const person = { ...args, id: uuid() }
+          persons = persons.concat(person)
+          return person
+        }
+      }
+    }
+    ```
+    - So the resolver of the address field of the Person type formats the response object to the right form.
+    ### Error handling
+    - UserInputError
+
+    ### Enum
+    ```javascript
+    enum YesNo {
+      YES
+      NO
+    }
+
+    type Query {
+      personCount: Int!
+      allPersons(phone: YesNo): [Person!]!
+      findPerson(name: String!): Person
+    }
+
+    Query: {
+      personCount: () => persons.length,
+      allPersons: (root, args) => {
+        if (!args.phone) {
+          return persons
+        }
+        const byPhone = (person) =>
+          args.phone === 'YES' ? person.phone : !person.phone
+        return persons.filter(byPhone)
+      },
+      findPerson: (root, args) =>
+        persons.find(p => p.name === args.name)
+    },
+    ```
+    ### Changing a phone number
+    ```javascript
+    type Mutation {
+      addPerson(
+        name: String!
+        phone: String
+        street: String!
+        city: String!
+      ): Person
+      editNumber(
+        name: String!
+        phone: String!
+      ): Person
+    }
+    ```
+    ### More on queries
+    ```javascript
+    query {
+      havePhone: allPersons(phone: YES){
+        name
+      }
+      phoneless: allPersons(phone: NO){
+        name
+      }
+    }
+    ```
+    ### Exercise (done)
   </details>
 - [ ] React and GraphQL
   <details>
