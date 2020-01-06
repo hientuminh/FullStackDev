@@ -1208,6 +1208,230 @@ The repository for MERN + GraphQL
 - [ ] React and GraphQL
   <details>
     <summary>Content</summary>
+
+    ### Apollo client
+    > npm install apollo-boost react-apollo graphql --save
+    ```javascript
+    import React from 'react'
+    import ReactDOM from 'react-dom'
+
+    import ApolloClient, { gql } from 'apollo-boost'
+
+    const client = new ApolloClient({
+      uri: 'http://localhost:4000/graphql'
+    })
+
+    const query = gql`
+    {
+      allPersons  {
+        name,
+        phone,
+        address {
+          street,
+          city
+        }
+        id
+      }
+    }
+    `
+
+    client.query({ query })
+      .then((response) => {
+        console.log(response.data)
+      })
+
+    const App = () => {
+      return <div>
+        test
+      </div>
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'))
+    ```
+    ### Query-component
+    ```javascript
+    const App = () => {
+      return <Query query={ALL_PERSONS}>
+        {(result) => <Persons result={result} />}
+      </Query>
+    }
+    ```
+    ### Named queries and variables
+    - The component we just used,Query, is not optimal for our purposes, because we would like to make the query only when a user wants to see the details of a person. One way would be to use the query method of the client object. All components of the application can access the query object via the ApolloConsumer component. Let's modify the App component to fetch a reference to the query object via ApolloConsumer, and pass it on to the Persons component.
+    ```javascript
+    const Persons = ({ result, client }) => {
+      const [person, setPerson] = useState(null)
+
+      if (result.loading) {
+        return <div>loading...</div>
+      }
+
+      const showPerson = async (name) => {
+        const { data } = await client.query({
+          query: FIND_PERSON,
+          variables: { nameToSearch: name }
+        })
+        setPerson(data.findPerson)
+      }
+    }
+    ```
+    ### Cache
+    - When we do multiple queries for example the address details of Arto Hellas, we notice something interesting: The query to the backend is done only the first time around. After this, despite of the same query being done again by the code, the query is not sent to the backend.
+    - Apollo client saves the responses of queries to cache. To optimize performance if the response to a query is already in the cache, the query is not sent to the server at all.
+    - Data in the cache is organized by query. Because Person objects have an identifying field id which is type ID, if the same object is returned by multiple queries, Apollo is able to combine them into one. Because of this, doing findPerson queries for the address details of Arto Hellas has updated the address details also for the query allPersons.
+    ### Mutation-component
+    - The pros and cons of this solution are almost opposite of the previous one. There is no extra web traffic, because queries are not done just in case. However if one user now updates the state of the server, the changes do not show to other users immediately. There are other ways to update the cache. More about those later in this part.
+    ```javascript
+    const CREATE_PERSON = gql`
+      mutation createPerson($name: String!, $street: String!, $city: String!, $phone: String) {
+        addPerson(
+          name: $name,
+          street: $street,
+          city: $city,
+          phone: $phone
+        ) {
+          name
+          phone
+          id
+          address {
+            street
+            city
+          }
+        }
+      }
+    `
+
+    const PersonForm = (props) => {
+      const [name, setName] = useState('')
+      const [phone, setPhone] = useState('')
+      const [street, setStreet] = useState('')
+      const [city, setCity] = useState('')
+
+      const submit = async (e) => {
+        e.preventDefault()
+        await props.addPerson({
+          variables: { name, phone, street, city }
+        })
+
+        setName('')
+        setPhone('')
+        setStreet('')
+        setCity('')
+      }
+
+      return (
+        <div>
+          <form onSubmit={submit}>
+            <div>
+              name <input
+                value={name}
+                onChange={({ target }) => setName(target.value)}
+              />
+            </div>
+            <div>
+              phone <input
+                value={phone}
+                onChange={({ target }) => setPhone(target.value)}
+              />
+            </div>
+            <div>
+              street <input
+                value={street}
+                onChange={({ target }) => setStreet(target.value)}
+              />
+            </div>
+            <div>
+              city <input
+                value={city}
+                onChange={({ target }) => setCity(target.value)}
+              />
+            </div>
+            <button type='submit'>add!</button>
+          </form>
+        </div>
+      )
+    }
+
+    const App = () => {
+      return (
+        <div>
+          <ApolloConsumer>
+            {(client =>
+              <Query query={ALL_PERSONS}>
+                {(result) =>
+                  <Persons result={result} client={client} />
+                }
+              </Query>
+            )}
+          </ApolloConsumer>
+          <h2>create new</h2>
+          <Mutation mutation={CREATE_PERSON} refetchQueries={[{query: ALL_PERSONS}]}>
+            {(addPerson) =>
+              <PersonForm
+                addPerson={addPerson}
+              />
+            }
+          </Mutation>
+        </div>
+      )
+    }
+    ```
+    ### Handling mutation error messages
+    ```javascript
+    const [errorMessage, setErrorMessage] = useState(null)
+    const handleError = (error) => {
+      setErrorMessage(error.graphQLErrors[0].message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 10000)
+    }
+    <Mutation
+      mutation={createPerson} 
+      refetchQueries={[{ query: allPersons }]}
+      onError={handleError}
+    >
+    ```
+    ### Updating a phone number
+    ```javascript
+    const EDIT_NUMBER = gql`
+    mutation editNumber($name: String!, $phone: String!) {
+      editNumber(name: $name, phone: $phone)  {
+        name
+        phone
+        address {
+          street
+          city
+        }
+        id
+      }
+    }
+    `
+    ```
+    ### Apollo Client and the applications state
+    ### Render props
+    - GraphQL components Query, Mutation and ApolloConsumer follow the so called render props principle. A component following this principle is given, as props or as a child between its tags (which technically is also a props), a function which defines how the component is rendered. With the render props -principle it is possible to move data or function references to the component responsible for rendering.
+    - The Render props -principle has been quite popular. For example react router we used in part 7 uses it. Using the component Route of the React router it is defined what the application renders when the browser is in a certain url. The following defines, that if the url is /notes, the component Notes is rendered, and if the url is for example /notes/10, a Note component which has been given id 10 as a parameter is rendered.
+    ### Apollo with hooks
+    > npm install --save react-apollo
+    ```javascript
+      import { useQuery } from '@apollo/react-hooks'
+      const persons = useQuery(ALL_PERSONS)
+      <ApolloConsumer>
+        {(client =>
+          <Query query={ALL_PERSONS}>
+            {(result) =>
+              <Persons result={result} client={client} />
+            }
+          </Query>
+        )}
+      </ApolloConsumer>
+
+    <Query query={ALL_PERSONS}>
+      {(result) => <Persons result={result} />}
+    </Query> 
+
+    <Persons result={persons} />
+    ```
   </details>
 - [ ] Database and user administration
   <details>
