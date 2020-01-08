@@ -1205,7 +1205,7 @@ The repository for MERN + GraphQL
     ```
     ### Exercise (done)
   </details>
-- [ ] React and GraphQL
+- [x] React and GraphQL
   <details>
     <summary>Content</summary>
 
@@ -1432,6 +1432,25 @@ The repository for MERN + GraphQL
 
     <Persons result={persons} />
     ```
+    ### Exercise
+    > npm install --save graphql react-apollo
+    - Add apollo for index.js
+    ```javascript
+    import ApploClient from 'apollo-boost'
+    import { ApolloProvider } from "@apollo/react-hooks"
+
+    const client = new ApploClient({
+      uri: 'http://localhost:4000/graphql'
+    })
+
+    ReactDOM.render(
+      <ApolloProvider client={client} >
+        <App />
+      </ApolloProvider>,
+      document.getElementById('root')
+    )
+    ```
+    - Add query for Authors
   </details>
 - [ ] Database and user administration
   <details>
