@@ -1455,13 +1455,483 @@ The repository for MERN + GraphQL
 - [ ] Database and user administration
   <details>
     <summary>Content</summary>
+
+    ### Mongoose and Apollo
+    ```javascript
+    const { ApolloServer, UserInputError, gql } = require('apollo-server')
+    const mongoose = require('mongoose')
+    const Person = require('./models/person')
+
+    mongoose.set('useFindAndModify', false)
+
+    const MONGODB_URI = 'mongodb+srv://fullstack:fullstack@cluster0-ostce.mongodb.net/graphql?retryWrites=true'
+
+    console.log('connecting to', MONGODB_URI)
+
+    mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+      .then(() => {
+        console.log('connected to MongoDB')
+      })
+      .catch((error) => {
+        console.log('error connection to MongoDB:', error.message)
+      })
+
+    const typeDefs = gql`
+      ...
+    `
+
+    const resolvers = {
+      Query: {
+        personCount: () => Person.collection.countDocuments(),
+        allPersons: (root, args) => {
+          // filters missing
+          return Person.find({})
+        },
+        findPerson: (root, args) => Person.findOne({ name: args.name })
+      },
+      Person: {
+        address: root => {
+          return {
+            street: root.street,
+            city: root.city
+          }
+        }
+      },
+      Mutation: {
+        addPerson: (root, args) => {
+          const person = new Person({ ...args })
+          return person.save()
+        },
+        editNumber: async (root, args) => {
+          const person = await Person.findOne({ name: args.name })
+          person.phone = args.phone
+          return person.save()
+        }
+      }
+    }
+    ```
+    ### Validation
+    ```javascript
+    Mutation: {
+        addPerson: async (root, args) => {
+        const person = new Person({ ...args })
+
+        try {
+          await person.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
+        return person
+      },
+        editNumber: async (root, args) => {
+          const person = await Person.findOne({ name: args.name })
+          person.phone = args.phone
+
+          try {
+            await person.save()
+          } catch (error) {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          }
+          return person
+        }
+    }
+    ```
+    ### User and log in
+    ```javascript
+    const jwt = require('jsonwebtoken')
+
+    const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
+
+    Mutation: {
+      // ..
+      createUser: (root, args) => {
+        const user = new User({ username: args.username })
+
+        return user.save()
+          .catch(error => {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          })
+      },
+      login: async (root, args) => {
+        const user = await User.findOne({ username: args.username })
+
+        if ( !user || args.password !== 'secred' ) {
+          throw new UserInputError("wrong credentials")
+        }
+
+        const userForToken = {
+          username: user.username,
+          id: user._id,
+        }
+
+        return { value: jwt.sign(userForToken, JWT_SECRET) }
+      },
+    },
+    ```
+    - Server with context
+    ```javascript
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      context: async ({ req }) => {
+        const auth = req ? req.headers.authorization : null
+        if (auth && auth.toLowerCase().startsWith('bearer ')) {
+          const decodedToken = jwt.verify(
+            auth.substring(7), JWT_SECRET
+          )
+          const currentUser = await User.findById(decodedToken.id).populate('friends')
+          return { currentUser }
+        }
+      }
+    })
+    Query: {
+      // ...
+      me: (root, args, context) => {
+        return context.currentUser
+      }
+    },
+    ```
+    ### Friends list
+    - mutation
+    ```javascript
+      addAsFriend: async (root, args, { currentUser }) => {
+      const nonFriendAlready = (person) => 
+        !currentUser.friends.map(f => f._id).includes(person._id)
+
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+
+      const person = await Person.findOne({ name: args.name })
+      if ( nonFriendAlready(person) ) {
+        currentUser.friends = currentUser.friends.concat(person)
+      }
+
+      await currentUser.save()
+
+      return currentUser
+    },
+    ```
+    ### Excercise
   </details>
 - [ ] Login and updateing the cache
   <details>
     <summary>Content</summary>
+
+    ### User log in
+    ```javascript
+    const LOGIN = gql`
+      mutation login($username: String!, $password: String!) {
+        login(username: $username, password: $password)  {
+          value
+        }
+      }
+    `
+
+    const App = () => {
+      const [token, setToken] = useState(null)
+
+      // ...
+
+      const [login] = useMutation(LOGIN, {
+        onError: handleError
+      })
+
+      const errorNotification = () => errorMessage &&
+        <div style={{ color: 'red' }}>
+          {errorMessage}
+        </div>
+
+      if (!token) {
+        return (
+          <div>
+            {errorNotification()}
+            <h2>Login</h2>
+            <LoginForm
+              login={login}
+              setToken={(token) => setToken(token)}
+            />
+          </div>
+        )
+      }
+
+      return (
+        // ...
+      )
+    }
+
+    // LoginForm
+    import React, { useState } from 'react'
+
+    const LoginForm = (props) => {
+      const [username, setUsername] = useState('')
+      const [password, setPassword] = useState('')
+
+      const submit = async (event) => {
+        event.preventDefault()
+
+        const result = await props.login({
+          variables: { username, password }
+        })
+
+        if (result) {
+          const token = result.data.login.value
+          props.setToken(token)
+          localStorage.setItem('phonenumbers-user-token', token)
+        }
+      }
+
+      return (
+        <div>
+          <form onSubmit={submit}>
+            <div>
+              username <input
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
+              />
+            </div>
+            <div>
+              password <input
+                type='password'
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
+            </div>
+            <button type='submit'>login</button>
+          </form>
+        </div>
+      )
+    }
+
+    export default LoginForm
+    ```
+    ### Adding a token to a header
+    - After the backend changes, creating new persons requires that a valid user token is sent with the request. In order to send the token, we have to change the way we define the ApolloClient-object in index.js a little.
+    > npm install --save apollo-link apollo-link-context
+
+    ```javascript
+    import { ApolloClient } from 'apollo-client'
+    import { createHttpLink } from 'apollo-link-http'
+    import { InMemoryCache } from 'apollo-cache-inmemory'
+    import { setContext } from 'apollo-link-context'
+
+    const httpLink = createHttpLink({
+      uri: 'http://localhost:4000/graphql',
+    })
+
+    const authLink = setContext((_, { headers }) => {
+      const token = localStorage.getItem('phonenumbers-user-token')
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `bearer ${token}` : null,
+        }
+      }
+    })
+
+    const client = new ApolloClient({
+      link: authLink.concat(httpLink),
+      cache: new InMemoryCache()
+    })
+    ```
+    ### Updating cache, revisited
+    ```javascript
+    const App = () => {
+      // ...
+
+      const [addPerson] = useMutation(CREATE_PERSON, {
+        onError: handleError,
+        refetchQueries: [{ query: ALL_PERSONS }]
+      })
+
+      // ..
+    }
+
+    const App = () => {
+    // ...
+
+    const [addPerson] = useMutation(CREATE_PERSON, {
+      onError: handleError,
+      update: (store, response) => {
+        const dataInStore = store.readQuery({ query: ALL_PERSONS })
+        dataInStore.allPersons.push(response.data.addPerson)
+        store.writeQuery({
+          query: ALL_PERSONS,
+          data: dataInStore
+        })
+      }
+    })
+  
+    // ..
+  }  
+    ```
   </details>
 - [ ] Fragments and subcriptions
   <details>
     <summary>Content</summary>
+
+    ### fragments
+    ```javascript
+    fragment PersonDetails on Person {
+      name
+      phone 
+      address {
+        street 
+        city
+      }
+    }
+    ```
+    ### Subscriptions
+    - Along with query- and mutation types, GraphQL offers a third operation type: subscriptions. With subscriptions clients can subscribe to updates about changes in the server.
+    ### Subscriptions on the server
+    ```javascript
+    type Subscription {
+      personAdded: Person!
+    }
+
+    const { PubSub } = require('apollo-server')
+    const pubsub = new PubSub()
+
+      Mutation: {
+        addPerson: async (root, args, context) => {
+          const person = new Person({ ...args })
+          const currentUser = context.currentUser
+
+          if (!currentUser) {
+            throw new AuthenticationError("not authenticated")
+          }
+
+          try {
+            await person.save()
+            currentUser.friends = currentUser.friends.concat(person)
+            await currentUser.save()
+          } catch (error) {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          }
+
+          pubsub.publish('PERSON_ADDED', { personAdded: person })
+
+          return person
+        },  
+      },
+      Subscription: {
+        personAdded: {
+          subscribe: () => pubsub.asyncIterator(['PERSON_ADDED'])
+        },
+      },
+
+    server.listen().then(({ url, subscriptionsUrl }) => {
+      console.log(`Server ready at ${url}`)
+      console.log(`Subscriptions ready at ${subscriptionsUrl}`)
+    })
+    ```
+    ### Subscriptions on the client
+    ```javascript
+    import React from 'react'
+    import ReactDOM from 'react-dom'
+    import App from './App'
+
+    import { ApolloProvider } from '@apollo/react-hooks'
+
+    import { ApolloClient } from 'apollo-client'
+    import { createHttpLink } from 'apollo-link-http'
+    import { InMemoryCache } from 'apollo-cache-inmemory'
+    import { setContext } from 'apollo-link-context'
+
+    import { split } from 'apollo-link'
+    import { WebSocketLink } from 'apollo-link-ws'
+    import { getMainDefinition } from 'apollo-utilities'
+
+    const wsLink = new WebSocketLink({
+      uri: `ws://localhost:4000/graphql`,
+      options: { reconnect: true }
+    })
+
+    const httpLink = createHttpLink({
+      uri: 'http://localhost:4000/graphql',
+    })
+
+    const authLink = setContext((_, { headers }) => {
+      const token = localStorage.getItem('phonenumbers-user-token')
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `bearer ${token}` : null,
+        }
+      }
+    })
+
+    const link = split(
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query)
+        return kind === 'OperationDefinition' && operation === 'subscription'
+      },
+      wsLink,
+      authLink.concat(httpLink),
+    )
+
+    const client = new ApolloClient({
+      link,
+      cache: new InMemoryCache()
+    })
+
+    ReactDOM.render(
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>,
+      document.getElementById('root')
+    )
+    ```
+    - The subscriptions are done using either the Subscription component or the useSubscription hook that is available in Apollo Client 3.0. We will use the hook-based solution
+    ```javascript
+    import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
+
+    // ...
+
+    const PERSON_ADDED = gql`
+      subscription {
+        personAdded {
+          ...PersonDetails
+        }
+      }
+      
+    ${PERSON_DETAILS}
+    `
+
+    const App = () => {
+      // ...
+
+      useSubscription(PERSON_ADDED, {
+        onSubscriptionData: ({ subscriptionData }) => {
+          console.log(subscriptionData)
+        }
+      })
+
+      // ...
+    }
+    ```
+    ### n+1-problem
+    ```javascript
+    Query: {
+      allPersons: (root, args) => {    
+        console.log('Person.find')
+        if (!args.phone) {
+          return Person.find({}).populate('friendOf')
+        }
+
+        return Person.find({ phone: { $exists: args.phone === 'YES' } })
+          .populate('friendOf')
+      },
+      // ...
+    }
+    ```
   </details>
   
