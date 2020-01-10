@@ -1452,7 +1452,7 @@ The repository for MERN + GraphQL
     ```
     - Add query for Authors
   </details>
-- [ ] Database and user administration
+- [x] Database and user administration
   <details>
     <summary>Content</summary>
 
@@ -1619,6 +1619,7 @@ The repository for MERN + GraphQL
     },
     ```
     ### Excercise
+    - Add index.js
   </details>
 - [ ] Login and updateing the cache
   <details>
