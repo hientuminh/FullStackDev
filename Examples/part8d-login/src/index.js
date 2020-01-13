@@ -1,22 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ApolloClient from 'apollo-client'
 import { ApolloProvider } from "@apollo/react-hooks"
+import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { setContext } from 'apollo-link-context'
-
 import App from './App'
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql',
 })
-// const client = new ApploClient({
-//   uri: 'http://localhost:4000/graphql'
-// })
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('user-token')
+  const token = localStorage.getItem('phonenumbers-user-token')
   return {
     headers: {
       ...headers,
@@ -33,6 +29,6 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client} >
     <App />
-  </ApolloProvider>,
-  document.getElementById('root')
+  </ApolloProvider>
+  , document.getElementById('root')
 )
