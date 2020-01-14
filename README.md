@@ -359,7 +359,7 @@ The repository for MERN + GraphQL
     ```
     ### Frontend integration tests
     - Two challenge: localStore, fetchAPI
-    - The manual mock concept from Jest provides us with a good solution. 
+    - The manual mock concept from Jest provides us with a good solution.
     - setupTests.js
     ```javascript
     import '@testing-library/jest-dom/extend-expect'
@@ -402,12 +402,12 @@ The repository for MERN + GraphQL
       return (
         <div>
           <form>
-            name: 
-            <input  {...name} /> 
-            <br/> 
+            name:
+            <input  {...name} />
+            <br/>
             birthdate:
             <input {...born} />
-            <br /> 
+            <br />
             height:
             <input {...height} />
           </form>
@@ -419,7 +419,7 @@ The repository for MERN + GraphQL
     }
     ```
     ### Revisited hook
-    > npm install --save eslint-plugin-react-hooks 
+    > npm install --save eslint-plugin-react-hooks
     ```javascript
     module.exports = {
       // ...
@@ -606,7 +606,7 @@ The repository for MERN + GraphQL
 - [x] Commnicating with server in a redux application
   <details>
     <summary>Content</summary>
- 
+
     ### Exercises
     ```javascript
     import noteService from './services/notes'
@@ -797,7 +797,7 @@ The repository for MERN + GraphQL
     - [Ant](https://ant.design/)
     - [Zurb](https://foundation.zurb.com/)
     ### Styled components
-    > 
+    >
     ```javascript
     const Button = styled.button`
       background: Bisque;
@@ -1060,7 +1060,7 @@ The repository for MERN + GraphQL
       phone: String
       street: String!
       city: String!
-      id: ID! 
+      id: ID!
     }
 
     type Query {
@@ -1386,7 +1386,7 @@ The repository for MERN + GraphQL
       }, 10000)
     }
     <Mutation
-      mutation={createPerson} 
+      mutation={createPerson}
       refetchQueries={[{ query: allPersons }]}
       onError={handleError}
     >
@@ -1428,7 +1428,7 @@ The repository for MERN + GraphQL
 
     <Query query={ALL_PERSONS}>
       {(result) => <Persons result={result} />}
-    </Query> 
+    </Query>
 
     <Persons result={persons} />
     ```
@@ -1601,7 +1601,7 @@ The repository for MERN + GraphQL
     - mutation
     ```javascript
       addAsFriend: async (root, args, { currentUser }) => {
-      const nonFriendAlready = (person) => 
+      const nonFriendAlready = (person) =>
         !currentUser.friends.map(f => f._id).includes(person._id)
 
       if (!currentUser) {
@@ -1621,7 +1621,7 @@ The repository for MERN + GraphQL
     ### Excercise
     - Add index.js
   </details>
-- [ ] Login and updateing the cache
+- [x] Login and updateding the cache
   <details>
     <summary>Content</summary>
 
@@ -1768,12 +1768,12 @@ The repository for MERN + GraphQL
         })
       }
     })
-  
+
     // ..
   }  
     ```
   </details>
-- [ ] Fragments and subcriptions
+- [x] Fragments and subcriptions
   <details>
     <summary>Content</summary>
 
@@ -1781,9 +1781,9 @@ The repository for MERN + GraphQL
     ```javascript
     fragment PersonDetails on Person {
       name
-      phone 
+      phone
       address {
-        street 
+        street
         city
       }
     }
@@ -1903,7 +1903,7 @@ The repository for MERN + GraphQL
           ...PersonDetails
         }
       }
-      
+
     ${PERSON_DETAILS}
     `
 
@@ -1935,4 +1935,3 @@ The repository for MERN + GraphQL
     }
     ```
   </details>
-  
