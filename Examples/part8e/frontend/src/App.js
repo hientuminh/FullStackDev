@@ -70,8 +70,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
 
-  const notify = (message) => {
+  const notify = (message, addedPerson) => {
     setErrorMessage(message)
+    updateCacheWith(addedPerson)
     setTimeout(() => {
       setErrorMessage(null)
     }, 10000)
@@ -89,6 +90,8 @@ const App = () => {
   const persons = useQuery(ALL_PERSONS) 
 
   const updateCacheWith = (addedPerson) => {
+    console.log("==========")
+    console.log(addPerson)
     const includedIn = (set, object) =>
       set.map(p => p.id).includes(object.id)  
 
@@ -105,8 +108,8 @@ const App = () => {
   useSubscription(PERSON_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedPerson = subscriptionData.data.personAdded
-      notify(`${addedPerson.name} added`)
-      updateCacheWith(addedPerson)
+      alert(`${addedPerson.name} added`)
+      notify(`${addedPerson.name} added`, addedPerson)
     }
   })
 

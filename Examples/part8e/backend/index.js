@@ -11,7 +11,7 @@ mongoose.set('useFindAndModify', false)
 
 const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
 
-const MONGODB_URI = 'mongodb+srv://admin:livepass@cluster0-ra1o1.mongodb.net/graph?retryWrites=true&w=majority'
+const MONGODB_URI = 'mongodb://localhost:27017/su_db'
 
 console.log('commecting to', MONGODB_URI)
 
